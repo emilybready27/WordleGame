@@ -1,6 +1,6 @@
 For my final project, my idea is to recreate the Wordle game that became popular over the past few months. I became very invested in playing this game every day, and I thought it was interesting how such a simple concept could really attract a lot of people. The only thing that I didn’t like about the application was that you could only play one game each day. I wanted to see if I could recreate this game to work as cleanly as the original and also make the change so that you’re not limited to just one word a day. Then hopefully I can play my own game instead of theirs (which also has ads, so that would be an added bonus).
 
-##Week 1: Wordle Structure
+## Week 1: Wordle Structure
 
 *Create an instance of Wordle for a given word*
 
@@ -13,7 +13,7 @@ For my final project, my idea is to recreate the Wordle game that became popular
 - Implement functionality to construct a single game given a single word
 - Print state of the game to the console
 
-##Week 2: Console User Inputs
+## Week 2: Console User Inputs
 
 *Play the game with input from the console*
 
@@ -30,7 +30,7 @@ For my final project, my idea is to recreate the Wordle game that became popular
   - 3: play an existing game
 - Change color of console text to match corresponding Letter color
 
-##Week 3: C++ Visualization
+## Week 3: C++ Visualization
 
 *Play the game using Cinder visualization*
 
@@ -44,7 +44,7 @@ For my final project, my idea is to recreate the Wordle game that became popular
 - Add buttons to Layout for inputting word guesses via mouse clicks
 - Override mouseDown
 
-##Week 4: Added Cinder Visualization
+## Week 4: Added Cinder Visualization
 
 *Look at past games and overall statistics*
 
@@ -56,7 +56,7 @@ For my final project, my idea is to recreate the Wordle game that became popular
   - View game Statistics
 - Write README.md of instructions
 
-##Stretch Goals
+## Stretch Goals
 
 - Implement points system so you can buy an extra guess
 - Implement boards of different sizes for different lengths of words
