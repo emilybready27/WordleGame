@@ -30,7 +30,7 @@ For my final project, my idea is to recreate the Wordle game that became popular
   - 3: play an existing game
 - Change color of console text to match corresponding Letter color
 
-## Week 3: C++ Visualization
+## Week 3: Cinder Visualization
 
 *Play the game using Cinder visualization*
 
