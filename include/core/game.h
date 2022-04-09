@@ -9,17 +9,17 @@ class Game {
  public:
   Game(const std::string& answer);
   
-  const std::string& GetAnswer() const;
+  const std::string& GetAnswerString() const;
+  const Word& GetAnswer() const;
   size_t GetGuessCount() const;
-  void IncrementGuessCount();
   bool IsComplete() const;
   bool HasWon() const;
-  void ProcessWord(const std::string& input);
+  void Evaluate(const std::string& guess);
   const Board& GetBoard() const;
   
  private:
   Board board_;
-  std::string answer_;
+  Word answer_;
   size_t guess_count_;
   bool has_won_;
 };

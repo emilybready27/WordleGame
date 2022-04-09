@@ -12,11 +12,15 @@ wordle::Letter::Letter(char letter, const std::string &color) {
   color_ = color;
 }
 
+bool Letter::operator==(const Letter &other) const {
+  return this->letter_ == other.letter_;
+}
+
 void Letter::SetLetter(char letter) {
   letter_ = letter;
 }
 
-char Letter::GetLetter() const {
+char Letter::ToString() const {
   return letter_;
 }
 

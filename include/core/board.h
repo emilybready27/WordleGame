@@ -17,6 +17,9 @@ class Board {
  private:
   std::vector<Word> words_;
   size_t word_count_;
+
+  size_t GetLetterCount(const Word &word, char target) const;
+  size_t GetCorrectLetterCount(const Word &word, char target) const;
 };
 
 } // namespace wordle

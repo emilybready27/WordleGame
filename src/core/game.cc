@@ -9,16 +9,16 @@ Game::Game(const std::string &answer) {
   has_won_ = false;
 }
 
-const std::string &Game::GetAnswer() const {
+const std::string &Game::GetAnswerString() const {
+  return answer_.ToString();
+}
+
+const Word& Game::GetAnswer() const {
   return answer_;
 }
 
 size_t Game::GetGuessCount() const {
   return guess_count_;
-}
-
-void Game::IncrementGuessCount() {
-  guess_count_++;
 }
 
 bool Game::IsComplete() const {
@@ -30,10 +30,10 @@ bool Game::HasWon() const {
 }
 
 // Note: at this point, we know the input is in the dictionary
-void Game::ProcessWord(const std::string &word) {
+void Game::Evaluate(const std::string &guess) {
   guess_count_++;
-  board_.UpdateBoard(word, answer_);
-  has_won_ = (board_.GetLastWord() == answer_);
+  board_.UpdateBoard(guess, answer_.ToString());
+  has_won_ = (board_.GetLastWord() == answer_.ToString());
 }
 
 const Board& Game::GetBoard() const {

@@ -5,6 +5,7 @@ namespace wordle {
 Wordle::Wordle() {
   games_ = std::vector<Game>();
   user_interface_ = UserInterface();
+  dictionary_ = Dictionary();
   game_count_ = 0;
   message_ = "";
   has_quit_ = false;
@@ -24,10 +25,7 @@ void Wordle::Play() {
     
     const std::string& response = user_interface_.GetResponse();
     if (response == "1") {
-      // fixed answer "start"
-      games_.emplace_back("start");
-      game_count_++;
-      PlayGame(games_[game_count_ - 1]);
+      PlayGame();
     } else if (response == "2") {
       
     } else if (response == "3") {
@@ -39,17 +37,19 @@ void Wordle::Play() {
 }
 
 // TODO: currently have to keep playing until the end of the game
-// TODO: change parameter
-void Wordle::PlayGame(Game &game) {
+void Wordle::PlayGame() {
+  Game game = Game(dictionary_.GenerateNewWord());
+  games_.push_back(game);
+  game_count_++;
+  
   while (!game.IsComplete()) {
     user_interface_.PrintInColor(game.GetBoard());
-    user_interface_.Print("Please enter a guess for the word:");
+    user_interface_.Print("Guess:");
     
     std::string response = user_interface_.GetResponse();
   
-    // if (dictionary_.Contains(response)
-    if (true) {
-      game.ProcessWord(response);
+     if (dictionary_.Contains(response)) {
+       game.Evaluate(response);
     } else {
       user_interface_.Print("Invalid word.");
     }
@@ -57,9 +57,9 @@ void Wordle::PlayGame(Game &game) {
 
   user_interface_.PrintInColor(game.GetBoard());
   if (game.HasWon()) {
-    message_ = "Hooray, you guessed \"" + game.GetAnswer() + "\" correctly!";
+    message_ = "Hooray, you guessed \"" + game.GetAnswerString() + "\" correctly!";
   } else {
-    message_ = "Sorry, the correct answer is \"" + game.GetAnswer() + "\".";
+    message_ = "Sorry, the correct answer is \"" + game.GetAnswerString() + "\".";
   }
   user_interface_.Print(message_);
 }

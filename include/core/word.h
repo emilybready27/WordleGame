@@ -12,11 +12,16 @@ class Word {
   Word(const std::vector<Letter>& letters);
   
   void SetWordLetters(const std::vector<Letter>& letters);
-  const std::vector<Letter>& GetWordLetters() const;
-  const std::string& GetWord() const;
+  const std::vector<Letter>& GetWord() const;
+  const std::string& ToString() const;
   void SetIsEmpty(bool is_empty);
   bool GetIsEmpty() const;
   void SetColor(size_t index, const std::string& color);
+  const std::string& GetColor(size_t index);
+  const Letter& GetLetter(size_t index) const;
+  
+  // Find all occurrences of target in the word
+  std::vector<size_t> FindLetter(const Letter& target);
   
  private:
   std::vector<Letter> letters_;
