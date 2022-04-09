@@ -11,6 +11,7 @@ class Board {
   
   void SetWords(const std::vector<Word>& words);
   const std::vector<Word>& GetWords() const;
+  const std::string& GetLastWord() const;
   
  private:
   std::vector<Word> words_;

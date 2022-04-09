@@ -1,5 +1,10 @@
 #include <core/wordle.h>
 
-int main(int argc, char** argv) {
+using wordle::Wordle;
+
+int main() {
+  Wordle wordle = Wordle();
+  wordle.Play();
+  
   return 0;
 }

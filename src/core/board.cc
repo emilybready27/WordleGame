@@ -18,4 +18,9 @@ const std::vector<Word>& Board::GetWords() const {
   return words_;
 }
 
+const std::string& Board::GetLastWord() const {
+  return words_[words_.size() - 1].GetWord();
+}
+
+
 } // namespace wordle

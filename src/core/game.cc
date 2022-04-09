@@ -16,8 +16,21 @@ size_t Game::GetGuessCount() const {
   return guess_count_;
 }
 
+void Game::IncrementGuessCount() {
+  guess_count_++;
+}
+
 bool Game::IsComplete() const {
   return guess_count_ == 6; // TODO: magic number 6
 }
+
+bool Game::IsWon() const {
+  return guess_count_ < 6 && board_.GetLastWord() == answer_;
+}
+
+const std::string &Game::ProcessInput(const std::string &input) {
+  return answer_;
+}
+
 
 } // namespace wordle

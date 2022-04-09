@@ -11,7 +11,10 @@ class Game {
   
   const std::string& GetAnswer() const;
   size_t GetGuessCount() const;
+  void IncrementGuessCount();
   bool IsComplete() const;
+  bool IsWon() const;
+  const std::string& ProcessInput(const std::string& input);
   
  private:
   Board board_;
