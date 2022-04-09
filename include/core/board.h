@@ -9,12 +9,15 @@ class Board {
   Board();
   Board(const std::vector<Word>& words);
   
+  void UpdateBoard(const std::string& word, const std::string& answer);
   void SetWords(const std::vector<Word>& words);
   const std::vector<Word>& GetWords() const;
   const std::string& GetLastWord() const;
+  std::string GetBoardString() const;
   
  private:
   std::vector<Word> words_;
+  size_t word_count_;
 };
 
 } // namespace wordle

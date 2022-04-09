@@ -4,7 +4,18 @@ namespace wordle {
 
 Word::Word() {
   letters_ = std::vector<Letter>(5); // TODO: magic number 5
+  word_ = "";
   is_empty_ = true;
+}
+
+Word::Word(const std::string& word) {
+  letters_ = std::vector<Letter>(5);
+  word_ = word;
+  is_empty_ = false;
+  
+  for (const char letter : word_) {
+    letters_.emplace_back(letter, "gray");
+  }
 }
 
 Word::Word(const std::vector<Letter> &letters) {
@@ -35,6 +46,10 @@ void Word::SetIsEmpty(bool is_empty) {
 
 bool Word::GetIsEmpty() const {
   return is_empty_;
+}
+
+void Word::SetColor(size_t index, const std::string &color) {
+  letters_[index].SetColor(color);
 }
 
 } // namespace wordle

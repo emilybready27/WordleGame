@@ -13,13 +13,15 @@ class Game {
   size_t GetGuessCount() const;
   void IncrementGuessCount();
   bool IsComplete() const;
-  bool IsWon() const;
-  const std::string& ProcessInput(const std::string& input);
+  bool HasWon() const;
+  void ProcessWord(const std::string& input);
+  std::string GetBoardString() const;
   
  private:
   Board board_;
   std::string answer_;
   size_t guess_count_;
+  bool has_won_;
 };
 
 } // namespace wordle

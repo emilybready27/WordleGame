@@ -8,6 +8,7 @@ namespace wordle {
 class Word {
  public:
   Word();
+  Word(const std::string& word);
   Word(const std::vector<Letter>& letters);
   
   void SetWordLetters(const std::vector<Letter>& letters);
@@ -15,6 +16,7 @@ class Word {
   const std::string& GetWord() const;
   void SetIsEmpty(bool is_empty);
   bool GetIsEmpty() const;
+  void SetColor(size_t index, const std::string& color);
   
  private:
   std::vector<Letter> letters_;

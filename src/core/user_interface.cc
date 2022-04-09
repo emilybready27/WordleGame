@@ -10,7 +10,7 @@ void UserInterface::Prompt(const std::vector<Game> &games) {
 }
 
 const std::string &UserInterface::GetResponse() {
-  std::cout << "> ";
+  std::cout << ">";
   std::cin >> response_;
   return response_;
 }

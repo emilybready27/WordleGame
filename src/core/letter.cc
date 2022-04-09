@@ -3,7 +3,7 @@
 namespace wordle {
 
 wordle::Letter::Letter() {
-  letter_ = '_';
+  letter_ = '?';
   color_ = "gray";
 }
 

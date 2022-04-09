@@ -18,6 +18,7 @@ private:
   UserInterface user_interface_;
   size_t game_count_;
   std::string message_;
+  bool has_quit_;
 };
 
 } // namespace wordle

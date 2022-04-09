@@ -6,6 +6,7 @@ Game::Game(const std::string &answer) {
   board_ = Board();
   answer_ = answer;
   guess_count_ = 0;
+  has_won_ = false;
 }
 
 const std::string &Game::GetAnswer() const {
@@ -21,15 +22,22 @@ void Game::IncrementGuessCount() {
 }
 
 bool Game::IsComplete() const {
-  return guess_count_ == 6; // TODO: magic number 6
+  return guess_count_ == 6 || has_won_; // TODO: magic number 6
 }
 
-bool Game::IsWon() const {
-  return guess_count_ < 6 && board_.GetLastWord() == answer_;
+bool Game::HasWon() const {
+  return has_won_;
 }
 
-const std::string &Game::ProcessInput(const std::string &input) {
-  return answer_;
+// Note: at this point, we know the input is in the dictionary
+void Game::ProcessWord(const std::string &word) {
+  guess_count_++;
+  board_.UpdateBoard(word, answer_);
+  has_won_ = (board_.GetLastWord() == answer_);
+}
+
+std::string Game::GetBoardString() const {
+  return board_.GetBoardString();
 }
 
 
