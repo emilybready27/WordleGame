@@ -10,6 +10,7 @@ class UserInterface {
   UserInterface();
   
   void Print(const std::string& message);
+  void PrintInColor(const Board& board);
   void Prompt(const std::vector<Game>& games);
   const std::string& GetResponse();
   

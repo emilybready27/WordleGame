@@ -15,7 +15,7 @@ class Game {
   bool IsComplete() const;
   bool HasWon() const;
   void ProcessWord(const std::string& input);
-  std::string GetBoardString() const;
+  const Board& GetBoard() const;
   
  private:
   Board board_;

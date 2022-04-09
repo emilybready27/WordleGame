@@ -13,8 +13,8 @@ Word::Word(const std::string& word) {
   word_ = word;
   is_empty_ = false;
   
-  for (const char letter : word_) {
-    letters_.emplace_back(letter, "gray");
+  for (size_t i = 0; i < 5; i++) { // TODO: magic number 5
+    letters_[i] = Letter(word[i], "gray");
   }
 }
 

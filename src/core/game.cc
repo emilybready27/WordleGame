@@ -36,8 +36,8 @@ void Game::ProcessWord(const std::string &word) {
   has_won_ = (board_.GetLastWord() == answer_);
 }
 
-std::string Game::GetBoardString() const {
-  return board_.GetBoardString();
+const Board& Game::GetBoard() const {
+  return board_;
 }
 
 

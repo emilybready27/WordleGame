@@ -14,7 +14,7 @@ Board::Board(const std::vector<Word> &words) {
 
 void Board::UpdateBoard(const std::string& word, const std::string& answer) {
   word_count_++;
-  words_[word_count_ - 1] = word; // by default, mark all letters incorrect
+  words_[word_count_ - 1] = Word(word); // by default, mark all letters incorrect
 
   // find correct letters and/or correct position
   // TODO: magic number 5
@@ -24,6 +24,7 @@ void Board::UpdateBoard(const std::string& word, const std::string& answer) {
       // correct letter in correct position
       if (word[i] == answer[j] && i == j) {
         words_[word_count_ - 1].SetColor(i, "green"); // TODO: hide color literal
+        break;
 
         // correct letter in incorrect position
       } else if (word[i] == answer[j]) {
@@ -44,14 +45,5 @@ const std::vector<Word>& Board::GetWords() const {
 const std::string& Board::GetLastWord() const {
   return words_[word_count_ - 1].GetWord();
 }
-
-std::string Board::GetBoardString() const {
-  std::string board_string = "\n";
-  for (const Word& word : words_) {
-    board_string += word.GetWord() + " \n";
-  }
-  return board_string;
-}
-
 
 } // namespace wordle

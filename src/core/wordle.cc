@@ -42,7 +42,7 @@ void Wordle::Play() {
 // TODO: change parameter
 void Wordle::PlayGame(Game &game) {
   while (!game.IsComplete()) {
-    user_interface_.Print(game.GetBoardString());
+    user_interface_.PrintInColor(game.GetBoard());
     user_interface_.Print("Please enter a guess for the word:");
     
     std::string response = user_interface_.GetResponse();
@@ -55,7 +55,7 @@ void Wordle::PlayGame(Game &game) {
     }
   }
 
-  user_interface_.Print(game.GetBoardString());
+  user_interface_.PrintInColor(game.GetBoard());
   if (game.HasWon()) {
     message_ = "Hooray, you guessed \"" + game.GetAnswer() + "\" correctly!";
   } else {
