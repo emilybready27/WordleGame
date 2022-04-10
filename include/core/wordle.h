@@ -21,6 +21,11 @@ private:
   size_t game_count_;
   std::string message_;
   bool has_quit_;
+  const size_t kNumGuesses = 6;
+  const size_t kNumLetters = 5;
+  const std::string kDefaultColor = "gray";
+  const std::string kSemiCorrectColor = "light_yellow";
+  const std::string kCorrectColor = "light_green";
 };
 
 } // namespace wordle

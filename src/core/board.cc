@@ -5,24 +5,26 @@ using wordle::Letter;
 
 namespace wordle {
 
-Board::Board() {
-  words_ = std::vector<Word>(6); // TODO: magic number 6
+Board::Board(size_t num_rows, size_t num_columns, const std::string& default_color,
+             const std::string& semi_correct_color, const std::string& correct_color) {
   word_count_ = 0;
-}
-
-Board::Board(const std::vector<Word> &words) {
-  words_ = words;
-  word_count_ = words_.size();
+  num_rows_ = num_rows;
+  num_columns_ = num_columns;
+  words_ = std::vector<Word>(num_rows_, Word(num_columns, default_color));
+  
+  default_color_ = default_color;
+  semi_correct_color_ = semi_correct_color;
+  correct_color_ = correct_color;
 }
 
 void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
-  Word guess_word = Word(guess); // by default, mark all letters as gray
-  Word answer_word = Word(answer);
+  Word guess_word = Word(guess, default_color_);
+  Word answer_word = Word(answer, default_color_);
 
   // find correct letters and correct position first
-  for (size_t i = 0; i < 5; i++) { // TODO: magic number 5
+  for (size_t i = 0; i < num_columns_; i++) {
     if (guess_word.GetLetter(i) == answer_word.GetLetter(i)) {
-      guess_word.SetColor(i, "green"); // TODO: hide color literal
+      guess_word.SetColor(i, correct_color_);
     }
   }
 
@@ -30,8 +32,8 @@ void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
   std::map<char, std::vector<size_t>> answer_letters;
   std::vector<char> keys;
 
-  for (size_t i = 0; i < 5; i++) {
-    const char guess_letter = guess_word.GetLetter(i).ToString();
+  for (size_t i = 0; i < num_columns_; i++) {
+    const char guess_letter = guess_word.GetLetter(i).ToChar();
 
     // if not already in map, find all indices of occurrences of guess_letter in guess
     if (guess_letters.count(guess_letter) == 0) {
@@ -51,15 +53,15 @@ void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
 
     for (const size_t guess_idx: guess_letters[key]) {
       for (const size_t answer_idx: answer_letters[key]) {
-        // found green letter
+        // found correct letter
         if (guess_idx == answer_idx) {
           break;
         }
 
-        // color letter yellow, else leave gray
+        // mark letter as semi-correct, else leave default color
         if (guess_idx != answer_idx && color_count < answer_count
-            && guess_word.GetColor(guess_idx) != "green") {
-          guess_word.SetColor(guess_idx, "yellow"); // TODO: hide color literal
+            && guess_word.GetColor(guess_idx) != correct_color_) {
+          guess_word.SetColor(guess_idx, semi_correct_color_);
           color_count++;
         }
       }
@@ -72,7 +74,7 @@ void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
 size_t Board::GetLetterCount(const Word& word, char target) const {
   size_t count = 0;
   for (const Letter& letter : word.GetWord()) {
-    if (letter.ToString() == target) {
+    if (letter.ToChar() == target) {
       count++;
     }
   }
@@ -82,7 +84,7 @@ size_t Board::GetLetterCount(const Word& word, char target) const {
 size_t Board::GetCorrectLetterCount(const Word &word, char target) const {
   size_t count = 0;
   for (const Letter& letter : word.GetWord()) {
-    if (letter.ToString() == target && letter.GetColor() == "green") {
+    if (letter.ToChar() == target && letter.GetColor() == correct_color_) {
       count++;
     }
   }

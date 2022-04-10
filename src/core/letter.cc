@@ -2,11 +2,6 @@
 
 namespace wordle {
 
-wordle::Letter::Letter() {
-  letter_ = '_';
-  color_ = "gray";
-}
-
 wordle::Letter::Letter(char letter, const std::string &color) {
   letter_ = letter;
   color_ = color;

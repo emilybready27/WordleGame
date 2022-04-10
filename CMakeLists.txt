@@ -60,7 +60,13 @@ list(APPEND CORE_SOURCE_FILES src/core/wordle.cc
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         src/visualizer/wordle_app.cc)
 
-list(APPEND TEST_FILES tests/test_wordle.cc)
+list(APPEND TEST_FILES tests/test_wordle.cc
+                       tests/test_board.cc
+                       tests/test_dictionary.cc
+                       tests/test_game.cc
+                       tests/test_letter.cc
+                       tests/test_user_interface.cc
+                       tests/test_word.cc)
 
 add_executable(wordle apps/wordle_main.cc ${CORE_SOURCE_FILES})
 target_include_directories(wordle PRIVATE include)

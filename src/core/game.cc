@@ -2,10 +2,13 @@
 
 namespace wordle {
 
-Game::Game(const std::string &answer) {
-  board_ = Board();
-  answer_ = answer;
+Game::Game(const std::string &answer, size_t num_guesses, size_t num_letters, const std::string& default_color,
+           const std::string& semi_correct_color, const std::string& correct_color) {
   guess_count_ = 0;
+  num_guesses_ = num_guesses;
+  num_letters_ = num_letters;
+  board_ = Board(num_guesses_, num_letters_, default_color, semi_correct_color, correct_color);
+  answer_ = Word(answer, default_color);
   has_won_ = false;
 }
 
@@ -22,7 +25,7 @@ size_t Game::GetGuessCount() const {
 }
 
 bool Game::IsComplete() const {
-  return guess_count_ == 6 || has_won_; // TODO: magic number 6
+  return guess_count_ == num_guesses_ || has_won_;
 }
 
 bool Game::HasWon() const {

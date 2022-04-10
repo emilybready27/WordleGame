@@ -11,7 +11,6 @@ Wordle::Wordle() {
   has_quit_ = false;
 }
 
-// TODO: build strings in here, not in UI
 void Wordle::Play() {
   user_interface_.Print("Welcome to Wordle!");
   
@@ -38,12 +37,13 @@ void Wordle::Play() {
 
 // TODO: currently have to keep playing until the end of the game
 void Wordle::PlayGame() {
-  Game game = Game(dictionary_.GenerateNewWord());
+  Game game = Game(dictionary_.GenerateNewWord(), kNumGuesses, kNumLetters,
+                   kDefaultColor, kSemiCorrectColor, kCorrectColor);
   games_.push_back(game);
   game_count_++;
   
   while (!game.IsComplete()) {
-    user_interface_.PrintInColor(game.GetBoard());
+    user_interface_.PrintInColor(game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
     user_interface_.Print("Guess:");
     
     std::string response = user_interface_.GetResponse();
@@ -55,7 +55,7 @@ void Wordle::PlayGame() {
     }
   }
 
-  user_interface_.PrintInColor(game.GetBoard());
+  user_interface_.PrintInColor(game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
   if (game.HasWon()) {
     message_ = "Hooray, you guessed \"" + game.GetAnswerString() + "\" correctly!";
   } else {

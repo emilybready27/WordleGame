@@ -6,11 +6,11 @@ namespace wordle {
     
 /** Alphabetical letter used in construction of Words. */
 class Letter {
- public:
+ public:  
   /**
-   * Default Letter is empty: '_' with color gray.
+   * Default constructor.
    */
-  Letter();
+  Letter() = default;
   
   /**
    * Constructs Letter with a character representation and color.

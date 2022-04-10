@@ -4,7 +4,7 @@
 using wordle::Letter;
 
 TEST_CASE("Test Letter equals override") {
-  Letter blank = Letter();
+  Letter blank = Letter('_', "gray");
   Letter correct = Letter('a', "gray");
   Letter guess = Letter('a', "green");
   
