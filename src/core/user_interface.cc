@@ -1,5 +1,7 @@
 #include <iostream>
 #include <Windows.h>
+#include <algorithm>
+#include <cctype>
 #include "core/user_interface.h"
 
 namespace wordle {
@@ -7,12 +9,17 @@ namespace wordle {
 UserInterface::UserInterface() {
 }
 
-void UserInterface::Prompt(const std::vector<Game> &games) {
-}
-
 const std::string &UserInterface::GetResponse() {
   std::cout << ">";
-  std::cin >> response_;
+  std::getline(std::cin, response_); // newline-delimited
+  
+  // remove whitespaces
+  response_.erase(remove(response_.begin(), response_.end(), ' '), response_.end());
+  
+  // convert to lowercase
+  std::transform(response_.begin(), response_.end(), response_.begin(),
+                 [](char c){ return std::tolower(c); });
+  
   return response_;
 }
 
@@ -35,7 +42,7 @@ void UserInterface::PrintInColor(const Board& board) {
         SetConsoleTextAttribute(hConsole, 0x08);
       }
       
-      std::cout << letter.ToString();
+      std::cout << letter.ToChar();
     }
     std::cout << std::endl;
   }
