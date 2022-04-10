@@ -3,6 +3,7 @@
 namespace wordle {
 
 Word::Word(size_t length, const std::string& default_color) {
+  // initialize Word as empty
   letters_ = std::vector<Letter>(length, Letter('_', default_color));
   word_ = "";
   length_ = length;
@@ -28,12 +29,29 @@ Word::Word(const std::vector<Letter> &letters) {
   }
 }
 
-const std::vector<Letter> &Word::GetWord() const {
-  return letters_;
+std::vector<size_t> Word::FindLetter(const Letter& target) {
+  // indices of occurrences of target in word, empty if none
+  std::vector<size_t> indices;
+  
+  for (size_t i = 0; i < length_; i++) {
+    if (letters_[i] == target) {
+      indices.push_back(i);
+    }
+  }
+  
+  return indices;
 }
 
 const std::string& Word::ToString() const {
   return word_;
+}
+
+const std::vector<Letter> &Word::GetLetters() const {
+  return letters_;
+}
+
+const Letter& Word::GetLetter(size_t index) const {
+  return letters_[index];
 }
 
 void Word::SetColor(size_t index, const std::string &color) {
@@ -42,21 +60,6 @@ void Word::SetColor(size_t index, const std::string &color) {
 
 const std::string &Word::GetColor(size_t index) {
   return letters_[index].GetColor();
-}
-
-const Letter& Word::GetLetter(size_t index) const {
-  return letters_[index];
-}
-
-std::vector<size_t> Word::FindLetter(const Letter& target) {
-  // find indices of occurrences of target in word, empty if none
-  std::vector<size_t> letters;
-  for (size_t i = 0; i < length_; i++) {
-    if (letters_[i] == target) {
-      letters.push_back(i);
-    }
-  }
-  return letters;
 }
 
 } // namespace wordle

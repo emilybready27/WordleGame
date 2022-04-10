@@ -73,7 +73,7 @@ void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
 
 size_t Board::GetLetterCount(const Word& word, char target) const {
   size_t count = 0;
-  for (const Letter& letter : word.GetWord()) {
+  for (const Letter& letter : word.GetLetters()) {
     if (letter.ToChar() == target) {
       count++;
     }
@@ -83,7 +83,7 @@ size_t Board::GetLetterCount(const Word& word, char target) const {
 
 size_t Board::GetCorrectLetterCount(const Word &word, char target) const {
   size_t count = 0;
-  for (const Letter& letter : word.GetWord()) {
+  for (const Letter& letter : word.GetLetters()) {
     if (letter.ToChar() == target && letter.GetColor() == correct_color_) {
       count++;
     }

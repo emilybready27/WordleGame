@@ -48,7 +48,7 @@ void UserInterface::PrintInColor(const Board& board, const std::string& default_
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
   
   for (const Word& word : board.GetWords()) {
-    for (const Letter& letter : word.GetWord()) {
+    for (const Letter& letter : word.GetLetters()) {
 
       // set color of text by color of letter
       if (letter.GetColor() == correct_color) {
