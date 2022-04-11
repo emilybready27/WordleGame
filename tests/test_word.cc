@@ -28,26 +28,60 @@ TEST_CASE("Test Word construction") {
   }
 }
 
-TEST_CASE("Test FindLetter method") {
+TEST_CASE("Test CountOccurrences method") {
   Word word = Word("start", "gray");
   
   SECTION("Correct result for 's'") {
-    REQUIRE(word.FindLetter(Letter('s', "gray")) == std::vector<size_t>{0});
+    REQUIRE(word.CountOccurrences('s') == 1);
   }
 
   SECTION("Correct result for 't'") {
-    REQUIRE(word.FindLetter(Letter('t', "gray")) == std::vector<size_t>{1,4});
+    REQUIRE(word.CountOccurrences('t') == 2);
+  }
+
+  SECTION("Correct result for 'f'") {
+    REQUIRE(word.CountOccurrences('f') == 0);
+  }
+}
+
+TEST_CASE("Test CountCorrectOccurrences method") {
+  Word word = Word("start", "gray");
+  word.SetColor(0, "green");
+  word.SetColor(1, "green");
+
+  SECTION("Correct result for 's'") {
+    REQUIRE(word.CountCorrectOccurrences('s', "green") == 1);
+  }
+
+  SECTION("Correct result for 't'") {
+    REQUIRE(word.CountCorrectOccurrences('t', "green") == 1);
+  }
+
+  SECTION("Correct result for 'f'") {
+    REQUIRE(word.CountCorrectOccurrences('f', "green") == 0);
+  }
+}
+
+TEST_CASE("Test FindOccurrences method") {
+  Word word = Word("start", "gray");
+  
+  SECTION("Correct result for 's'") {
+    REQUIRE(word.FindOccurrences(Letter('s', "gray")) == std::vector<size_t>{0});
+  }
+
+  SECTION("Correct result for 't'") {
+    REQUIRE(word.FindOccurrences(Letter('t', "gray")) == std::vector<size_t>{1, 4});
   }
 
   SECTION("Correct result for 'a'") {
-    REQUIRE(word.FindLetter(Letter('a', "gray")) == std::vector<size_t>{2});
+    REQUIRE(word.FindOccurrences(Letter('a', "gray")) == std::vector<size_t>{2});
   }
 
   SECTION("Correct result for 'r'") {
-    REQUIRE(word.FindLetter(Letter('r', "gray")) == std::vector<size_t>{3});
+    REQUIRE(word.FindOccurrences(Letter('r', "gray")) == std::vector<size_t>{3});
   }
   
   SECTION("Correct result for 'f") {
-    REQUIRE(word.FindLetter(Letter('f', "gray")).empty());
+    REQUIRE(word.FindOccurrences(Letter('f', "gray")).empty());
   }
 }
