@@ -32,13 +32,28 @@ class Word {
    * @param letters std::vector<Letter>
    */
   Word(const std::vector<Letter>& letters);
+  
+  /**
+   * Counts the number of occurrences of target in the Word.
+   * @param target char
+   * @return size_t
+   */
+  size_t CountOccurrences(char target) const;
+  
+  /**
+   * Counts the number of occurrences of target marked correct in the Word.
+   * @param target char
+   * @param correct_color std::string
+   * @return size_t
+   */
+  size_t CountCorrectOccurrences(char target, const std::string& correct_color) const;
 
   /**
    * Finds all indices of occurrences of the given Letter in the Word.
    * @param target Letter
    * @return std::vector<size_t>
    */
-  std::vector<size_t> FindLetter(const Letter& target);
+  std::vector<size_t> FindOccurrences(const Letter& target) const;
 
   /**
    * Retrieves string representation of Word.

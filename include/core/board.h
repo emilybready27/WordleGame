@@ -11,7 +11,6 @@ class Board {
         const std::string& semi_correct_color, const std::string& correct_color);
   
   void UpdateBoard(const std::string& word, const std::string& answer);
-  void SetWords(const std::vector<Word>& words);
   const std::vector<Word>& GetWords() const;
   const std::string& GetLastWord() const;
   
@@ -23,9 +22,6 @@ class Board {
   std::string default_color_;
   std::string semi_correct_color_;
   std::string correct_color_;
-
-  size_t GetLetterCount(const Word &word, char target) const;
-  size_t GetCorrectLetterCount(const Word &word, char target) const;
 };
 
 } // namespace wordle

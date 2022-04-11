@@ -21,78 +21,41 @@ void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
   Word guess_word = Word(guess, default_color_);
   Word answer_word = Word(answer, default_color_);
 
-  // find correct letters and correct position first
+  // map each distinct letter in guess to indices of occurrences of that letter in guess
+  std::map<char, std::vector<size_t>> guess_indices;
+  std::vector<char> distinct_letters;
+
+  for (const Letter& letter : guess_word.GetLetters()) {
+    // if not already in map, find occurrences of letter in guess
+    if (guess_indices.count(letter.ToChar()) == 0) {
+      guess_indices[letter.ToChar()] = guess_word.FindOccurrences(letter);
+      distinct_letters.push_back(letter.ToChar());
+    }
+  }
+
+  // find any correct letters in correct position, mark as correct
   for (size_t i = 0; i < num_columns_; i++) {
     if (guess_word.GetLetter(i) == answer_word.GetLetter(i)) {
       guess_word.SetColor(i, correct_color_);
     }
   }
+  
+  // find any correct letters in incorrect position, mark as semi-correct
+  for (const char letter: distinct_letters) {
+    size_t num_colored = guess_word.CountCorrectOccurrences(letter, correct_color_);
+    size_t num_total = answer_word.CountOccurrences(letter);
 
-  std::map<char, std::vector<size_t>> guess_letters;
-  std::map<char, std::vector<size_t>> answer_letters;
-  std::vector<char> keys;
-
-  for (size_t i = 0; i < num_columns_; i++) {
-    const char guess_letter = guess_word.GetLetter(i).ToChar();
-
-    // if not already in map, find all indices of occurrences of guess_letter in guess
-    if (guess_letters.count(guess_letter) == 0) {
-      guess_letters[guess_letter] = guess_word.FindLetter(guess_word.GetLetter(i));
-      keys.push_back(guess_letter);
-    }
-
-    // if not already in map, find all indices of occurrences of guess_letter in answer
-    if (answer_letters.count(guess_letter) == 0) {
-      answer_letters[guess_letter] = answer_word.FindLetter(guess_word.GetLetter(i));
-    }
-  }
-
-  for (const char key: keys) {
-    size_t color_count = GetCorrectLetterCount(guess_word, key);
-    size_t answer_count = GetLetterCount(answer_word, key);
-
-    for (const size_t guess_idx: guess_letters[key]) {
-      for (const size_t answer_idx: answer_letters[key]) {
-        // found correct letter
-        if (guess_idx == answer_idx) {
-          break;
-        }
-
-        // mark letter as semi-correct, else leave default color
-        if (guess_idx != answer_idx && color_count < answer_count
-            && guess_word.GetColor(guess_idx) != correct_color_) {
-          guess_word.SetColor(guess_idx, semi_correct_color_);
-          color_count++;
-        }
+    // mark at most (num_total - num_colored) other occurrences as semi-correct,
+    // starting from left to right
+    for (const size_t guess_idx: guess_indices[letter]) {
+      if (guess_word.GetColor(guess_idx) != correct_color_ && num_colored < num_total) {
+        guess_word.SetColor(guess_idx, semi_correct_color_);
+        num_colored++;
       }
     }
   }
 
   words_[word_count_++] = guess_word;
-}
-
-size_t Board::GetLetterCount(const Word& word, char target) const {
-  size_t count = 0;
-  for (const Letter& letter : word.GetLetters()) {
-    if (letter.ToChar() == target) {
-      count++;
-    }
-  }
-  return count;
-}
-
-size_t Board::GetCorrectLetterCount(const Word &word, char target) const {
-  size_t count = 0;
-  for (const Letter& letter : word.GetLetters()) {
-    if (letter.ToChar() == target && letter.GetColor() == correct_color_) {
-      count++;
-    }
-  }
-  return count;
-}
-
-void Board::SetWords(const std::vector<Word> &words) {
-  words_ = words;
 }
 
 const std::vector<Word>& Board::GetWords() const {
