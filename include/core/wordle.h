@@ -26,6 +26,8 @@ private:
   const std::string kDefaultColor = "gray";
   const std::string kSemiCorrectColor = "light_yellow";
   const std::string kCorrectColor = "light_green";
+  const std::string kPathToDictionary =
+          R"(C:\Users\Mary\Desktop\Cinder\my-projects\final-project-ebready2\resources\dictionary.txt)";
 };
 
 } // namespace wordle

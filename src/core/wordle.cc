@@ -5,7 +5,7 @@ namespace wordle {
 Wordle::Wordle() {
   games_ = std::vector<Game>();
   user_interface_ = UserInterface();
-  dictionary_ = Dictionary();
+  dictionary_ = Dictionary(kPathToDictionary);
   game_count_ = 0;
   message_ = "";
   has_quit_ = false;
