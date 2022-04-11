@@ -57,9 +57,9 @@ void Wordle::PlayGame() {
 
   user_interface_.PrintInColor(game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
   if (game.HasWon()) {
-    message_ = "Hooray, you guessed \"" + game.GetAnswerString() + "\" correctly!";
+    message_ = "Hooray, you guessed \"" + game.GetAnswer().ToString() + "\" correctly!";
   } else {
-    message_ = "Sorry, the correct answer is \"" + game.GetAnswerString() + "\".";
+    message_ = "Sorry, the correct answer is \"" + game.GetAnswer().ToString() + "\".";
   }
   user_interface_.Print(message_);
 }
