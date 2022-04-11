@@ -1,3 +1,4 @@
+#include <iostream>
 #include "core/wordle.h"
 
 namespace wordle {
@@ -12,17 +13,18 @@ Wordle::Wordle() {
 }
 
 void Wordle::Play() {
-  user_interface_.Print("Welcome to Wordle!");
+  user_interface_.PrintLn(std::cout, "Welcome to Wordle!");
   
   while (!has_quit_) {
     message_ = "Please enter a number:\n "
                "1 to start a new game\n "
                "2 to view the instructions\n "
                "3 to view a previous game\n "
-               "4 to quit";
-    user_interface_.Print(message_);
+               "4 to quit\n"
+               ">";
+    user_interface_.Print(std::cout, message_);
     
-    const std::string& response = user_interface_.GetResponse();
+    const std::string& response = user_interface_.GetResponse(std::cin);
     if (response == "1") {
       PlayGame();
     } else if (response == "2") {
@@ -43,25 +45,26 @@ void Wordle::PlayGame() {
   game_count_++;
   
   while (!game.IsComplete()) {
-    user_interface_.PrintInColor(game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
-    user_interface_.Print("Guess:");
+    user_interface_.PrintBoard(std::cout, game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
+    user_interface_.Print(std::cout, "Guess:\n"
+                                       ">");
     
-    std::string response = user_interface_.GetResponse();
+    std::string response = user_interface_.GetResponse(std::cin);
   
      if (dictionary_.Contains(response)) {
        game.Evaluate(response);
     } else {
-      user_interface_.Print("Invalid word.");
+       user_interface_.PrintLn(std::cout, "Invalid word.");
     }
   }
 
-  user_interface_.PrintInColor(game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
+  user_interface_.PrintBoard(std::cout, game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
   if (game.HasWon()) {
     message_ = "Hooray, you guessed \"" + game.GetAnswer().ToString() + "\" correctly!";
   } else {
     message_ = "Sorry, the correct answer is \"" + game.GetAnswer().ToString() + "\".";
   }
-  user_interface_.Print(message_);
+  user_interface_.PrintLn(std::cout, message_);
 }
 
 } // namespace wordle

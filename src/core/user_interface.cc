@@ -25,9 +25,8 @@ UserInterface::UserInterface() {
   colors_["bright_white"] = 15;
 }
 
-const std::string &UserInterface::GetResponse() {
-  std::cout << ">";
-  std::getline(std::cin, response_); // newline-delimited
+const std::string &UserInterface::GetResponse(std::istream& input) {
+  std::getline(input, response_); // newline-delimited
   
   // remove whitespaces
   response_.erase(remove(response_.begin(), response_.end(), ' '), response_.end());
@@ -39,13 +38,23 @@ const std::string &UserInterface::GetResponse() {
   return response_;
 }
 
-void UserInterface::Print(const std::string& message) {
-  std::cout << message << std::endl;
+void UserInterface::Print(std::ostream& output, const std::string& message) {
+  message_ = message;
+  output << message_;
 }
 
-void UserInterface::PrintInColor(const Board& board, const std::string& default_color,
-                                 const std::string& semi_correct_color, const std::string& correct_color) {
+void UserInterface::PrintLn(std::ostream& output, const std::string& message) {
+  message_ = message;
+  output << message_ << std::endl;
+}
+
+void UserInterface::PrintBoard(std::ostream& output,
+                               const Board& board,
+                               const std::string& default_color,
+                               const std::string& semi_correct_color,
+                               const std::string& correct_color) {
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+  message_ = "";
   
   for (const Word& word : board.GetWords()) {
     for (const Letter& letter : word.GetLetters()) {
@@ -59,11 +68,14 @@ void UserInterface::PrintInColor(const Board& board, const std::string& default_
         SetConsoleTextAttribute(hConsole, colors_[default_color]);
       }
       
-      std::cout << letter.ToChar();
+      output << letter.ToChar();
+      message_ += letter.ToChar();
     }
-    std::cout << std::endl;
+    output << std::endl;
+    message_ += '\n';
   }
   
+  // reset back to original color
   SetConsoleTextAttribute(hConsole, colors_["white"]);
 }
 
