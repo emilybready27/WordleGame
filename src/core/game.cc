@@ -36,7 +36,7 @@ bool Game::HasWon() const {
 void Game::Evaluate(const std::string &guess) {
   guess_count_++;
   board_.UpdateBoard(guess, answer_.ToString());
-  has_won_ = (board_.GetLastWord() == answer_.ToString());
+  has_won_ = (board_.GetLastWord().ToString() == answer_.ToString());
 }
 
 const Board& Game::GetBoard() const {

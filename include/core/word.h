@@ -32,6 +32,13 @@ class Word {
    * @param letters std::vector<Letter>
    */
   Word(const std::vector<Letter>& letters);
+
+  /**
+   * Two Words are equal if their Letter vectors are equal.
+   * @param other Word
+   * @return bool
+   */
+  bool operator==(const Word &other) const;
   
   /**
    * Counts the number of occurrences of target in the Word.

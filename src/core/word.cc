@@ -29,6 +29,10 @@ Word::Word(const std::vector<Letter> &letters) {
   }
 }
 
+bool Word::operator==(const Word &other) const {
+  return this->letters_ == other.letters_;
+}
+
 size_t Word::CountOccurrences(char target) const {
   size_t count = 0;
   
@@ -58,7 +62,7 @@ std::vector<size_t> Word::FindOccurrences(const Letter& target) const {
   std::vector<size_t> indices;
   
   for (size_t i = 0; i < length_; i++) {
-    if (letters_[i] == target) {
+    if (letters_[i].ToChar() == target.ToChar()) {
       indices.push_back(i);
     }
   }

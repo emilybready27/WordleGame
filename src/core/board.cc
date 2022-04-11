@@ -5,8 +5,11 @@ using wordle::Letter;
 
 namespace wordle {
 
-Board::Board(size_t num_rows, size_t num_columns, const std::string& default_color,
-             const std::string& semi_correct_color, const std::string& correct_color) {
+Board::Board(size_t num_rows, size_t num_columns,
+             const std::string& default_color,
+             const std::string& semi_correct_color,
+             const std::string& correct_color) {
+  
   word_count_ = 0;
   num_rows_ = num_rows;
   num_columns_ = num_columns;
@@ -35,7 +38,7 @@ void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
 
   // find any correct letters in correct position, mark as correct
   for (size_t i = 0; i < num_columns_; i++) {
-    if (guess_word.GetLetter(i) == answer_word.GetLetter(i)) {
+    if (guess_word.GetLetter(i).ToChar() == answer_word.GetLetter(i).ToChar()) {
       guess_word.SetColor(i, correct_color_);
     }
   }
@@ -62,8 +65,8 @@ const std::vector<Word>& Board::GetWords() const {
   return words_;
 }
 
-const std::string& Board::GetLastWord() const {
-  return words_[word_count_ - 1].ToString();
+const Word& Board::GetLastWord() const {
+  return words_[word_count_ - 1];
 }
 
 } // namespace wordle

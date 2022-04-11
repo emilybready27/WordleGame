@@ -8,8 +8,7 @@ wordle::Letter::Letter(char letter, const std::string &color) {
 }
 
 bool Letter::operator==(const Letter &other) const {
-  // equal if letter_'s match, disregard color_
-  return this->letter_ == other.letter_;
+  return this->letter_ == other.letter_ && this->color_ == other.color_;
 }
 
 char Letter::ToChar() const {

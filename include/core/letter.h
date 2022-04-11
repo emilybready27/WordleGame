@@ -20,7 +20,7 @@ class Letter {
   Letter(char letter, const std::string& color);
 
   /**
-   * Two Letters are equal if their character representations are equal.
+   * Two Letters are equal if their character representations and colors are equal.
    * @param other Letter
    * @return bool
    */
