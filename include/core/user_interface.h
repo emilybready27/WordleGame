@@ -27,6 +27,20 @@ class UserInterface {
    * @param message std::string
    */
   void PrintLn(std::ostream& output, const std::string& message);
+
+  /**
+   * Prints the given message to the output stream in the given color.
+   * @param output std::ostream
+   * @param message std::string
+   */
+  void Print(std::ostream& output, const std::string& message, const std::string& color);
+
+  /**
+   * Prints the given message ending in a newline to the output stream in the given color.
+   * @param output std::ostream
+   * @param message std::string
+   */
+  void PrintLn(std::ostream& output, const std::string& message, const std::string& color);
   
   /**
    * Prints the given Board to the output stream using colors.

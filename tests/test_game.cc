@@ -4,7 +4,7 @@
 using wordle::Game;
 
 TEST_CASE("Test win") {
-  Game game = Game("catch", 6, 5, "gray", "yellow", "green");
+  Game game = Game("catch", 6, 5, "gray", "yellow", "green", "red");
   game.Evaluate("laces");
   
   SECTION("Incorrect guess hasn't won") {
@@ -23,7 +23,7 @@ TEST_CASE("Test win") {
 }
 
 TEST_CASE("Test loss") {
-  Game game = Game("catch", 6, 5, "gray", "yellow", "green");
+  Game game = Game("catch", 6, 5, "gray", "yellow", "green", "red");
   game.Evaluate("laces");
   game.Evaluate("candy");
   game.Evaluate("catty");

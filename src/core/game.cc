@@ -7,7 +7,8 @@ Game::Game(const std::string &answer,
            size_t num_letters,
            const std::string& default_color,
            const std::string& semi_correct_color,
-           const std::string& correct_color) {
+           const std::string& correct_color,
+           const std::string& incorrect_color) {
   
   guess_count_ = 0;
   num_guesses_ = num_guesses;
@@ -16,6 +17,10 @@ Game::Game(const std::string &answer,
   
   board_ = Board(num_guesses_, num_letters_, default_color, semi_correct_color, correct_color);
   answer_ = Word(answer, default_color);
+  
+  correct_color_ = correct_color;
+  semi_correct_color_ = semi_correct_color;
+  incorrect_color_ = incorrect_color;
 }
 
 void Game::Evaluate(const std::string &guess) {
@@ -38,6 +43,16 @@ const Board& Game::GetBoard() const {
 
 const Word &Game::GetAnswer() const {
   return answer_;
+}
+
+const std::string& Game::GetColor() const {
+  if (has_won_) {
+    return correct_color_;
+  } else if (guess_count_ == num_guesses_) {
+    return incorrect_color_;
+  } else {
+    return semi_correct_color_;
+  }
 }
 
 } // namespace wordle

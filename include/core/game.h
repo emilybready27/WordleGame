@@ -16,13 +16,15 @@ class Game {
    * @param default_color std::string
    * @param semi_correct_color std::string
    * @param correct_color std::string
+   * @param incorrect_color std::string
    */
   Game(const std::string& answer,
        size_t num_guesses,
        size_t num_letters,
        const std::string& default_color,
        const std::string& semi_correct_color,
-       const std::string& correct_color);
+       const std::string& correct_color,
+       const std::string& incorrect_color);
 
   /**
    * Updates the Game state to reflect the given guess.
@@ -55,6 +57,12 @@ class Game {
    */
   const Word& GetAnswer() const;
   
+  /**
+   * Retrieves the Game's color.
+   * @return 
+   */
+  const std::string& GetColor() const;
+  
  private:
   /**
    * Board consisting of all the Words played.
@@ -86,6 +94,21 @@ class Game {
    * True if Game completed and won.
    */
   bool has_won_;
+
+  /**
+   * Color indicating Game is won.
+   */
+  std::string correct_color_;
+  
+  /**
+   * Color indicating Game is started.
+   */
+  std::string semi_correct_color_;
+  
+  /**
+   * Color indicating Game is lost.
+   */
+  std::string incorrect_color_;
 };
 
 } // namespace wordle

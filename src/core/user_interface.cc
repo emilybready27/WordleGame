@@ -48,6 +48,28 @@ void UserInterface::PrintLn(std::ostream& output, const std::string& message) {
   output << message_ << std::endl;
 }
 
+void UserInterface::Print(std::ostream& output, const std::string& message, const std::string& color) {
+  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+  SetConsoleTextAttribute(hConsole, colors_[color]);
+  
+//  Print(output, message);
+  message_ = message;
+  output << message_;
+
+  // reset back to original color
+  SetConsoleTextAttribute(hConsole, colors_["white"]);
+}
+
+void UserInterface::PrintLn(std::ostream& output, const std::string& message, const std::string& color) {
+  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+  SetConsoleTextAttribute(hConsole, colors_[color]);
+  
+  PrintLn(output, message);
+
+  // reset back to original color
+  SetConsoleTextAttribute(hConsole, colors_["white"]);
+}
+
 void UserInterface::PrintBoard(std::ostream& output,
                                const Board& board,
                                const std::string& default_color,

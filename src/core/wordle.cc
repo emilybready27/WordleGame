@@ -8,7 +8,6 @@ Wordle::Wordle() {
   user_interface_ = UserInterface();
   dictionary_ = Dictionary(kPathToDictionary);
   game_count_ = 0;
-  message_ = "";
   has_quit_ = false;
 }
 
@@ -16,55 +15,112 @@ void Wordle::Play() {
   user_interface_.PrintLn(std::cout, "Welcome to Wordle!");
   
   while (!has_quit_) {
-    message_ = "Please enter a number:\n "
-               "1 to start a new game\n "
-               "2 to view the instructions\n "
-               "3 to view a previous game\n "
-               "4 to quit\n"
-               ">";
-    user_interface_.Print(std::cout, message_);
+    std::string message = "Please enter a number:\n "
+                          "1 to start a new game\n "
+                          "2 to visit a previous game\n "
+                          "3 to view the instructions\n "
+                          "4 to quit\n"
+                          ">";
+    user_interface_.Print(std::cout, message);
     
     const std::string& response = user_interface_.GetResponse(std::cin);
     if (response == "1") {
-      PlayGame();
+      PlayNewGame();
     } else if (response == "2") {
-      
+      PlayPastGame();
     } else if (response == "3") {
-      
+      PrintInstructions();
     } else if (response == "4") {
       has_quit_ = true;
     }
   }
 }
 
-// TODO: currently have to keep playing until the end of the game
-void Wordle::PlayGame() {
-  Game game = Game(dictionary_.GenerateNewWord(), kNumGuesses, kNumLetters,
-                   kDefaultColor, kSemiCorrectColor, kCorrectColor);
-  games_.push_back(game);
-  game_count_++;
+void Wordle::PlayGame(size_t index) {
+  Game& game = games_[index];
   
   while (!game.IsComplete()) {
     user_interface_.PrintBoard(std::cout, game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
-    user_interface_.Print(std::cout, "Guess:\n"
-                                       ">");
-    
+    user_interface_.Print(std::cout, "Enter a guess or 0 to return:\n"
+                                     ">");
+
     std::string response = user_interface_.GetResponse(std::cin);
-  
-     if (dictionary_.Contains(response)) {
-       game.Evaluate(response);
-    } else {
-       user_interface_.PrintLn(std::cout, "Invalid word.");
+
+    if (response == "0") { // return
+      return;
+    } else if (dictionary_.Contains(response)) { // valid word
+      game.Evaluate(response);
+    } else { // invalid word
+      user_interface_.PrintLn(std::cout, "Invalid word.");
     }
   }
 
   user_interface_.PrintBoard(std::cout, game.GetBoard(), kDefaultColor, kSemiCorrectColor, kCorrectColor);
+  
   if (game.HasWon()) {
-    message_ = "Hooray, you guessed \"" + game.GetAnswer().ToString() + "\" correctly!";
+    user_interface_.PrintLn(std::cout, "You guessed \"" + game.GetAnswer().ToString() + "\" correctly!");
   } else {
-    message_ = "Sorry, the correct answer is \"" + game.GetAnswer().ToString() + "\".";
+    user_interface_.PrintLn(std::cout, "The correct answer is \"" + game.GetAnswer().ToString() + "\".");
   }
-  user_interface_.PrintLn(std::cout, message_);
+}
+
+void Wordle::PlayNewGame() {
+  Game game = Game(dictionary_.GenerateNewWord(), kNumGuesses, kNumLetters,
+                   kDefaultColor, kSemiCorrectColor, kCorrectColor, kIncorrectColor);
+  games_.push_back(game);
+  
+  PlayGame(game_count_++);
+}
+
+void Wordle::PlayPastGame() {
+  if (game_count_ == 0) {
+    user_interface_.PrintLn(std::cout, "No previous games");
+    return;
+  }
+  
+  PrintGameSelection();
+  
+  int index = -1;
+  while (index < 0 || index >= (int) game_count_) {
+    user_interface_.Print(std::cout, "Select a number:\n"
+                                     ">");
+    index = stoi(user_interface_.GetResponse(std::cin));
+  }
+  
+  PlayGame(index);
+}
+
+void Wordle::PrintGameSelection() {
+  // print out display of game indices
+  for (size_t i = 0; i < game_count_; i++) {
+    std::string game_color = games_[i].GetColor();
+    user_interface_.Print(std::cout, std::to_string(i) + " ", game_color);
+  }
+  user_interface_.PrintLn(std::cout, "");
+}
+
+void Wordle::PrintInstructions() {
+  user_interface_.PrintLn(std::cout, "");
+  user_interface_.PrintLn(std::cout, "Instructions:\n"
+                                     "Guess the word in 6 (or less) tries.\n"
+                                     "After each guess, the letter color changes to show what letters are correct.");
+
+  user_interface_.PrintLn(std::cout, "The letter s is in the word and in the correct spot.");
+  Board correct = Board(1, kNumLetters, kDefaultColor, kSemiCorrectColor, kCorrectColor);
+  correct.UpdateBoard("start", "sheep");
+  user_interface_.PrintBoard(std::cout, correct, kDefaultColor, kSemiCorrectColor, kCorrectColor);
+
+  user_interface_.PrintLn(std::cout, "The letter e is in the word but in the wrong spot.");
+  Board semi_correct = Board(1, kNumLetters, kDefaultColor, kSemiCorrectColor, kCorrectColor);
+  semi_correct.UpdateBoard("learn", "sheep");
+  user_interface_.PrintBoard(std::cout, semi_correct, kDefaultColor, kSemiCorrectColor, kCorrectColor);
+
+  user_interface_.PrintLn(std::cout, "None of the letters are in the correct spot.");
+  Board incorrect = Board(1, kNumLetters, kDefaultColor, kSemiCorrectColor, kCorrectColor);
+  incorrect.UpdateBoard("wordy", "sheep");
+  user_interface_.PrintBoard(std::cout, incorrect, kDefaultColor, kSemiCorrectColor, kCorrectColor);
+
+  user_interface_.PrintLn(std::cout, "");
 }
 
 } // namespace wordle
