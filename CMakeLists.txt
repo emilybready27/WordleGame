@@ -67,7 +67,8 @@ list(APPEND TEST_FILES tests/test_wordle.cc
                        tests/test_game.cc
                        tests/test_letter.cc
                        tests/test_user_interface.cc
-                       tests/test_word.cc)
+                       tests/test_word.cc
+                       tests/test_statistics.cc)
 
 add_executable(wordle apps/wordle_main.cc ${CORE_SOURCE_FILES})
 target_include_directories(wordle PRIVATE include)
