@@ -63,6 +63,12 @@ class Game {
    */
   const std::string& GetColor() const;
   
+  /**
+   * Retrieves the number of guesses taken.
+   * @return size_t
+   */
+  size_t GetGuessCount() const;
+  
  private:
   /**
    * Board consisting of all the Words played.

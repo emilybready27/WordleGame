@@ -4,6 +4,7 @@
 #include "game.h"
 #include "user_interface.h"
 #include "dictionary.h"
+#include "statistics.h"
 
 namespace wordle {
 
@@ -20,7 +21,8 @@ class Wordle {
    * 1. start a new game
    * 2. visit a previous game
    * 3. view the instructions
-   * 4. quit
+   * 4. view the statistics
+   * 5. quit
    */
   void Play();
   
@@ -48,6 +50,11 @@ class Wordle {
    * Stores the valid words that can be played.
    */
   Dictionary dictionary_;
+  
+  /**
+   * Keeps track of relevant stats.
+   */
+  Statistics statistics_;
   
   /**
    * Number of games played.
@@ -84,6 +91,11 @@ class Wordle {
    * Prints the instructions for the user.
    */
   void PrintInstructions();
+  
+  /**
+   * Prints the user statistics.
+   */
+  void PrintStatistics();
 };
 
 } // namespace wordle

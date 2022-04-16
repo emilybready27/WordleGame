@@ -55,4 +55,8 @@ const std::string& Game::GetColor() const {
   }
 }
 
+size_t Game::GetGuessCount() const {
+  return guess_count_;
+}
+
 } // namespace wordle

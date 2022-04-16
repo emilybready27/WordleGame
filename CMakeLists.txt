@@ -55,7 +55,8 @@ list(APPEND CORE_SOURCE_FILES src/core/wordle.cc
                               src/core/board.cc
                               src/core/word.cc
                               src/core/letter.cc
-                              src/core/dictionary.cc)
+                              src/core/dictionary.cc
+                              src/core/statistics.cc)
 
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         src/visualizer/wordle_app.cc)
