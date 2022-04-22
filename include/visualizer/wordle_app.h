@@ -20,7 +20,7 @@ public:
   void keyDown(ci::app::KeyEvent event) override;
 
   const double kWindowWidth = 875;
-  const double kWindowHeight = 1025;
+  const double kWindowHeight = 1225;
   const double kMargin = 100;
   
 private:
@@ -29,6 +29,7 @@ private:
   std::string guess_;
   size_t guess_size_;
   size_t guess_count_;
+  size_t action_;
   
 };
 
