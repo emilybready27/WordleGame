@@ -26,13 +26,31 @@ class Wordle {
    */
   void Play();
   
+  void AddGame();
+  
+  /**
+   * Getters
+   */
+  size_t GetNumGuesses() const;
+  size_t GetNumLetters() const;
+  const std::string& GetDefaultColor() const;
+  const std::string& GetSemiCorrectColor() const;
+  const std::string& GetCorrectColor() const;
+  const std::string& GetIncorrectColor() const;
+  std::vector<Game>& GetGames();
+  const UserInterface& GetUserInterface() const;
+  const Dictionary& GetDictionary() const;
+  Statistics& GetStatistics();
+  size_t GetGameCount() const;
+  bool GetHasQuit() const;
+  
  private:
   const size_t kNumGuesses = 6;
   const size_t kNumLetters = 5;
   const std::string kDefaultColor = "gray";
-  const std::string kSemiCorrectColor = "light_yellow";
-  const std::string kCorrectColor = "light_green";
-  const std::string kIncorrectColor = "light_red";
+  const std::string kSemiCorrectColor = "yellow";
+  const std::string kCorrectColor = "green";
+  const std::string kIncorrectColor = "red";
   const std::string kPathToDictionary =
           R"(C:\Users\Mary\Desktop\Cinder\my-projects\final-project-ebready2\resources\dictionary.txt)";
   

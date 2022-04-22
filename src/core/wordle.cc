@@ -98,6 +98,12 @@ void Wordle::PlayPastGame() {
   PlayGame(index - 1);
 }
 
+void Wordle::AddGame() {
+  games_.emplace_back(dictionary_.GenerateNewWord(), kNumGuesses, kNumLetters,
+                      kDefaultColor, kSemiCorrectColor, kCorrectColor, kIncorrectColor);
+  game_count_++;
+}
+
 void Wordle::PrintGameSelection() {
   // print out display of game indices
   for (size_t i = 0; i < game_count_; i++) {
@@ -146,5 +152,54 @@ void Wordle::PrintStatistics() {
   }
   user_interface_.PrintLn(std::cout, "");
 }
+
+size_t Wordle::GetNumGuesses() const {
+  return kNumGuesses;
+}
+
+size_t Wordle::GetNumLetters() const {
+  return kNumLetters;
+}
+
+const std::string &Wordle::GetDefaultColor() const {
+  return kDefaultColor;
+}
+
+const std::string &Wordle::GetSemiCorrectColor() const {
+  return kSemiCorrectColor;
+}
+
+const std::string &Wordle::GetCorrectColor() const {
+  return kCorrectColor;
+}
+
+const std::string &Wordle::GetIncorrectColor() const {
+  return kIncorrectColor;
+}
+
+std::vector<Game> &Wordle::GetGames() {
+  return games_;
+}
+
+const UserInterface &Wordle::GetUserInterface() const {
+  return user_interface_;
+}
+
+const Dictionary &Wordle::GetDictionary() const {
+  return dictionary_;
+}
+
+Statistics &Wordle::GetStatistics() {
+  return statistics_;
+}
+
+size_t Wordle::GetGameCount() const {
+  return game_count_;
+}
+
+bool Wordle::GetHasQuit() const {
+  return has_quit_;
+}
+
 
 } // namespace wordle
