@@ -30,11 +30,14 @@ private:
   size_t guess_size_;
   size_t guess_count_;
   size_t action_;
+  size_t game_index_;
+  bool game_chosen_;
   
   void DrawTile(const Tile& tile) const;
-  void DrawAnswerBox(const std::string& answer) const;
+  void DrawAnswerBox(const std::string& answer, const std::string& color) const;
   void ResetTiles();
   void ResetTiles(size_t row);
+  void ResetTile(size_t row, size_t col);
   
 };
 

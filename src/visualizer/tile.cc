@@ -2,17 +2,17 @@
 
 namespace wordle {
     
-Tile::Tile(char label, const std::string& color, const ci::Rectf& square) {
+Tile::Tile(const std::string& label, const std::string& color, const ci::Rectf& square) {
   label_ = label;
   color_ = color;
   square_ = square;
 }
 
-void Tile::SetLabel(char label) {
+void Tile::SetLabel(const std::string& label) {
   label_ = label;
 }
 
-char Tile::GetLabel() const {
+const std::string& Tile::GetLabel() const {
   return label_;
 }
 

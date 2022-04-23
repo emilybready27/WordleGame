@@ -15,7 +15,7 @@ WordleApp::WordleApp() : wordle_() {
                                  kMargin + (tile_size + kMargin/2)*i);
       ci::Rectf square = ci::Rectf(coords, coords + ci::vec2(tile_size, tile_size));
       
-      tiles_[i].emplace_back(' ', wordle_.GetDefaultColor(), square);
+      tiles_[i].emplace_back(" ", wordle_.GetDefaultColor(), square);
     }
   }
 
@@ -23,6 +23,8 @@ WordleApp::WordleApp() : wordle_() {
   guess_size_ = 0;
   guess_count_ = 0;
   action_ = 0;
+  game_index_ = 0;
+  game_chosen_ = false;
 }
 
 void WordleApp::draw() {
@@ -52,21 +54,29 @@ void WordleApp::draw() {
 
   // visit previous game
   } else if (action_ == 2) {
-    // TODO: add selection display for which game to view
-    const Game& game = wordle_.GetGames()[wordle_.GetGameCount()-1];
     ci::gl::clear(ci::Color::black());
     
-    // display board
+    // display a selection of games
+    if (!game_chosen_) {
+      for (size_t i = 0; i < wordle_.GetGameCount(); i++) {
+        std::string game_color = wordle_.GetGames()[i].GetColor();
+        Tile tile = Tile(std::to_string(i+1), game_color, tiles_[i / 6][i % 5].GetSquare());
+        DrawTile(tile);
+      }
+      return;
+    }
+    
+    // display state of previous game
+    const Game& game = wordle_.GetGames()[game_index_];
     for (size_t i = 0; i < tiles_.size(); i++) {
       for (size_t j = 0; j < tiles_[i].size(); j++) {
         
         if (i >= game.GetGuessCount()) {
-          tiles_[i][j].SetColor("gray");
-          tiles_[i][j].SetLabel(' ');
+          ResetTile(i, j);
         } else {
           const Letter& letter = game.GetBoard().GetWords()[i].GetLetter(j);
           tiles_[i][j].SetColor(letter.GetColor());
-          tiles_[i][j].SetLabel(letter.ToChar());
+          tiles_[i][j].SetLabel(std::string(1, letter.ToChar()));
         }
 
         DrawTile(tiles_[i][j]);
@@ -74,7 +84,7 @@ void WordleApp::draw() {
     }
     
     if (game.IsComplete()) {
-      DrawAnswerBox(game.GetAnswer().ToString()); // display answer
+      DrawAnswerBox(game.GetAnswer().ToString(), game.GetColor()); // display answer
     } else {
       action_ = 1; // continue playing game
     }
@@ -97,7 +107,7 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
   // is a letter and haven't finished guess
   if (isalpha(event.getCode()) && guess_size_ < wordle_.GetNumLetters()) {
     guess_ += event.getChar(); // TODO: sanitize
-    tiles_[guess_count_][guess_size_++].SetLabel(event.getChar());
+    tiles_[guess_count_][guess_size_++].SetLabel(std::string(1, event.getChar()));
     
   // is a return and have finished guess
   } else if (event.getCode() == ci::app::KeyEvent::KEY_RETURN && guess_size_ == wordle_.GetNumLetters()) {
@@ -130,14 +140,24 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
   // entered a number for an action
   } else if (isdigit(event.getCode())) {
     std::string str = std::string(1, event.getChar());
-    action_ = std::stoi(str);
+    size_t input = std::stoi(str);
+    
+    if (action_ == 2 && input >= 1 && input <= wordle_.GetGameCount()) {
+      game_chosen_ = true;
+      game_index_ = input - 1;
+      return;
+    } else if (action_ == 2) {
+      return;
+    }
 
+    action_ = input;
     if (action_ == 1) {
       wordle_.AddGame();
       ResetTiles();
       guess_count_ = 0;
+      game_index_ = (game_index_ == 0) ? 0 : game_index_ + 1;
     } else if (action_ == 2) {
-      // nothing right now...
+      game_chosen_ = false;
     } else if (action_ == 5) {
       exit(0);
     }
@@ -152,12 +172,12 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
 void WordleApp::DrawTile(const wordle::Tile &tile) const {
   ci::gl::color(ci::Color(&(tile.GetColor()[0])));
   ci::gl::drawSolidRect(tile.GetSquare());
-  ci::gl::drawString(std::string(1, tile.GetLabel()), tile.GetSquare().getCenter() - ci::vec2(15.0, 15.0),
+  ci::gl::drawString(tile.GetLabel(), tile.GetSquare().getCenter() - ci::vec2(15.0, 15.0),
                      ci::Color("black"), ci::Font("Roboto", 50.0));
 }
 
-void WordleApp::DrawAnswerBox(const std::string& answer) const {
-  ci::gl::color(ci::Color("green"));
+void WordleApp::DrawAnswerBox(const std::string& answer, const std::string& color) const {
+  ci::gl::color(ci::Color(&(color[0])));
   ci::Rectf answer_box = ci::Rectf(ci::vec2(kWindowWidth/2 - 2*kMargin, 1025),
                                    ci::vec2(kWindowWidth/2 + 2*kMargin, 1125));
   ci::gl::drawSolidRect(answer_box);
@@ -173,9 +193,13 @@ void WordleApp::ResetTiles() {
 
 void WordleApp::ResetTiles(size_t row) {
   for (size_t col = 0; col < tiles_[row].size(); col++) {
-    tiles_[row][col].SetLabel(' ');
-    tiles_[row][col].SetColor("gray");
+    ResetTile(row, col);
   }
+}
+
+void WordleApp::ResetTile(size_t row, size_t col) {
+  tiles_[row][col].SetLabel(" ");
+  tiles_[row][col].SetColor("gray");
 }
 
 } // namespace visualizer
