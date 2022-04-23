@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "cinder/gl/gl.h"
 #include "tile.h"
 
 namespace wordle {
@@ -11,6 +12,9 @@ class HomePage {
  public:
   HomePage() = default;
   HomePage(double margin, double window_width, double window_height);
+  
+  void Draw() const;
+  void DrawTile(const Tile& tile) const;
   
   const Tile &GetWelcomeBox() const;
   const Tile &GetNewGameBox() const;

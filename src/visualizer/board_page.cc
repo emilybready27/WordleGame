@@ -27,20 +27,62 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
   }
 }
 
+void BoardPage::Draw() const {
+  DrawTile(home_box_);
+
+  for (size_t i = 0; i < board_.size(); i++) {
+    for (size_t j = 0; j < board_[i].size(); j++) {
+      DrawTile(board_[i][j]);
+    }
+  }
+}
+
+void BoardPage::Draw(const Game& game) {
+  ResetBoardTiles();
+
+  for (size_t i = 0; i < game.GetGuessCount(); i++) {
+    for (size_t j = 0; j < 5; j++) {
+      const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
+      board_[i][j].SetLabelAndColor(std::string(1, letter.ToChar()), letter.GetColor());
+    }
+  }
+
+  Draw();
+}
+
+void BoardPage::DrawTile(const Tile& tile) const {
+  ci::gl::color(ci::Color(&(tile.GetColor()[0])));
+  ci::gl::drawSolidRect(tile.GetBounds());
+  ci::gl::drawStringCentered(tile.GetLabel(),
+                             tile.GetBounds().getCenter() - ci::vec2(0, tile.GetBounds().getHeight() / 4),
+                             ci::Color("black"),
+                             ci::Font("Arial", 50.0));
+}
+
+void BoardPage::ResetBoardTiles() {
+  for (size_t i = 0; i < 6; i++) {
+    ResetBoardTiles(i);
+  }
+}
+
+void BoardPage::ResetBoardTiles(size_t row) {
+  for (size_t col = 0; col < 5; col++) {
+    board_[row][col].SetLabel(" ");
+    board_[row][col].SetColor("gray");
+  }
+}
+
+void BoardPage::DrawAnswer(const std::string& answer, const std::string& color) {
+  answer_box_.SetLabelAndColor(answer, color);
+  DrawTile(answer_box_);
+}
+
 void BoardPage::SetBoardTileLabel(size_t i, size_t j, const std::string &label) {
   board_[i][j].SetLabel(label);
 }
 
 void BoardPage::SetBoardTileColor(size_t i, size_t j, const std::string &color) {
   board_[i][j].SetColor(color);
-}
-
-void BoardPage::SetBoardTile(size_t i, size_t j, const std::string &label, const std::string& color) {
-  board_[i][j].SetLabelAndColor(label, color);
-}
-
-void BoardPage::SetAnswerBox(const std::string &label, const std::string &color) {
-  answer_box_.SetLabelAndColor(label, color);
 }
 
 const Tile &BoardPage::GetAnswerBox() const {

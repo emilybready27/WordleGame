@@ -4,7 +4,9 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "core/wordle.h"
-#include "layout.h"
+#include "home_page.h"
+#include "board_page.h"
+#include "selection_page.h"
 #include "tile.h"
 
 namespace wordle {
@@ -25,7 +27,13 @@ public:
   
 private:
   Wordle wordle_;
-  Layout layout_;
+  
+  HomePage home_page_;
+  BoardPage board_page_;
+  SelectionPage selection_page_;
+  //StatisticsPage statistics_page_;
+  //InstructionsPage instructions_page_;
+  
   std::string guess_;
   size_t guess_size_;
   size_t guess_count_;
@@ -33,8 +41,6 @@ private:
   size_t game_index_;
   bool game_chosen_;
 
-  void DrawAnswerBox(const std::string& answer, const std::string& color) const;
-  void DisplayHomePage();
   void DisplayStatistics();
   void ClearScreen();
   

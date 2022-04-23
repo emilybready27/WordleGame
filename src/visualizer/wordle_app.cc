@@ -7,10 +7,13 @@ namespace visualizer {
 WordleApp::WordleApp() : wordle_() {
   ci::app::setWindowSize((int) kWindowWidth, (int) kWindowHeight);
 
-  layout_ = Layout(kWindowWidth, kWindowHeight, kMargin,
-                   wordle_.GetNumGuesses(), wordle_.GetNumLetters(),
-                   wordle_.GetDefaultColor(), wordle_.GetSemiCorrectColor(),
-                   wordle_.GetCorrectColor(), wordle_.GetIncorrectColor());
+  // TODO: magic numbers
+  // TODO: handle > 30 games
+  home_page_ = HomePage(kMargin, kWindowWidth, kWindowHeight);
+  board_page_ = BoardPage(kMargin, kWindowWidth, kWindowHeight,
+                          wordle_.GetNumGuesses(), wordle_.GetNumLetters());
+  selection_page_ = SelectionPage(kMargin, kWindowWidth, kWindowHeight,
+                                  wordle_.GetNumGuesses(), wordle_.GetNumLetters());
   
   guess_ = "";
   guess_size_ = 0;
@@ -25,24 +28,24 @@ void WordleApp::draw() {
   
   switch (action_) {
     case 0:
-      layout_.DrawHomePage();
+      home_page_.Draw();
       break;
       
     case 1:
-      layout_.DrawBoardPage();
+      board_page_.Draw();
       break;
       
     case 2: {
       if (!game_chosen_) {
-        layout_.DrawSelectionPage();
+        selection_page_.Draw();
         break;
       }
 
       const Game &game = wordle_.GetGames()[game_index_];
-      layout_.DrawBoardPage(game);
+      board_page_.Draw(game);
 
       if (game.IsComplete()) { // display answer
-        layout_.DrawBoardAnswer(game.GetAnswer().ToString(), game.GetColor());
+        board_page_.DrawAnswer(game.GetAnswer().ToString(), game.GetColor());
       } else { // continue playing game
         action_ = 1;
       }
@@ -66,23 +69,23 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
       return;
     }
     guess_ += tolower(event.getChar());
-    layout_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, event.getChar()));
+    board_page_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, event.getChar()));
     
   // entered a return and have finished guess
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_RETURN && guess_size_ == wordle_.GetNumLetters()) {
     Game &game = wordle_.GetGames()[game_index_];
 
     if (!wordle_.GetDictionary().Contains(guess_)) { // invalid word
-      layout_.ResetBoardTiles(guess_count_);
+      board_page_.ResetBoardTiles(guess_count_);
     } else { // valid word
       game.Evaluate(guess_);
 
       // update tile colors
       for (size_t i = 0; i < guess_size_; i++) {
         std::string color = game.GetBoard().GetLastWord().GetLetter(i).GetColor();
-        layout_.SetBoardTileColor(guess_count_, i, color);
+        board_page_.SetBoardTileColor(guess_count_, i, color);
       }
-      layout_.SetSelectionTileColor(game_index_, game.GetColor());
+      selection_page_.SetSelectionColor(game_index_, game.GetColor());
       guess_count_++;
 
       // game over
@@ -119,8 +122,8 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
       wordle_.AddGame();
       guess_count_ = 0;
       game_index_ = wordle_.GetGameCount() - 1;
-      layout_.ResetBoardTiles();
-      layout_.AddGame(game_index_);
+      board_page_.ResetBoardTiles();
+      selection_page_.AddGame(game_index_);
     } else if (action_ == 2) {
       game_chosen_ = false;
     } else if (action_ == 5) {
@@ -131,7 +134,7 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
     action_ = 0;
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_BACKSPACE && guess_size_ > 0) {
     guess_.pop_back();
-    layout_.SetBoardTileLabel(guess_count_, --guess_size_, " ");
+    board_page_.SetBoardTileLabel(guess_count_, --guess_size_, " ");
   }
   
 }

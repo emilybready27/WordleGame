@@ -26,6 +26,23 @@ HomePage::HomePage(double margin, double window_width, double window_height) {
                                    ci::vec2(window_width - margin, 2*margin + 300 + margin)));
 }
 
+void HomePage::Draw() const {
+  DrawTile(welcome_box_);
+  DrawTile(new_game_box_);
+  DrawTile(old_game_box_);
+  DrawTile(instructions_box_);
+  DrawTile(statistics_box_);
+}
+
+void HomePage::DrawTile(const Tile& tile) const {
+  ci::gl::color(ci::Color(&(tile.GetColor()[0])));
+  ci::gl::drawSolidRect(tile.GetBounds());
+  ci::gl::drawStringCentered(tile.GetLabel(),
+                             tile.GetBounds().getCenter() - ci::vec2(0, tile.GetBounds().getHeight() / 4),
+                             ci::Color("black"),
+                             ci::Font("Arial", 50.0));
+}
+
 const Tile &HomePage::GetWelcomeBox() const {
   return welcome_box_;
 }
