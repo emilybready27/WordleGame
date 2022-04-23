@@ -8,6 +8,11 @@ Tile::Tile(const std::string& label, const std::string& color, const ci::Rectf& 
   square_ = square;
 }
 
+void Tile::SetLabelAndColor(const std::string &label, const std::string &color) {
+  label_ = label;
+  color_ = color;
+}
+
 void Tile::SetLabel(const std::string& label) {
   label_ = label;
 }
@@ -27,5 +32,5 @@ const std::string& Tile::GetColor() const {
 const ci::Rectf& Tile::GetSquare() const {
   return square_;
 }
-    
+
 }

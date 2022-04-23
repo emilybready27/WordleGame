@@ -33,10 +33,16 @@ private:
   bool game_chosen_;
   
   void DrawTile(const Tile& tile) const;
+  void DrawTiles() const;
   void DrawAnswerBox(const std::string& answer, const std::string& color) const;
+  void DisplayHomePage();
+  void DisplayGameSelection();
+  void DisplayStatistics();
+  void ClearScreen();
   void ResetTiles();
   void ResetTiles(size_t row);
   void ResetTile(size_t row, size_t col);
+  void UpdateTiles(const Game& game);
   
 };
 

@@ -28,83 +28,38 @@ WordleApp::WordleApp() : wordle_() {
 }
 
 void WordleApp::draw() {
-  ci::gl::clear(ci::Color::black());
+  ClearScreen();
   
-  // not currently playing a game
-  if (action_ == 0) {
-    std::string message = "Welcome to Wordle!\n \n"
-                          "Please enter a number:\n "
-                          "1 to start a new game\n "
-                          "2 to visit a previous game\n "
-                          "3 to view the instructions\n "
-                          "4 to view the statistics\n "
-                          "5 to quit\n \n"
-                          "ESC anytime to return";
-    ci::gl::drawStringCentered(message, ci::vec2(kWindowWidth/2, kMargin),
-                               ci::Color("white"), ci::Font("Roboto", 50.0));
-    
-  // currently playing a game
-  } else if (action_ == 1) {
-    for (size_t i = 0; i < tiles_.size(); i++) {
-      for (size_t j = 0; j < tiles_[i].size(); j++) {
-        DrawTile(tiles_[i][j]);
+  switch (action_) {
+    case 0:
+      DisplayHomePage();
+      break;
+      
+    case 1:
+      DrawTiles();
+      break;
+      
+    case 2: {
+      if (!game_chosen_) {
+        DisplayGameSelection();
+        break;
       }
-    }
 
-  // visit previous game
-  } else if (action_ == 2) {
-    // display a selection of games
-    if (!game_chosen_) {
-      for (size_t i = 0; i < wordle_.GetGameCount(); i++) {
-        std::string game_color = wordle_.GetGames()[i].GetColor();
-        Tile tile = Tile(std::to_string(i + 1), game_color, tiles_[i / 6][i % 5].GetSquare());
-        DrawTile(tile);
+      const Game &game = wordle_.GetGames()[game_index_];
+      UpdateTiles(game);
+      DrawTiles();
+
+      if (game.IsComplete()) {
+        DrawAnswerBox(game.GetAnswer().ToString(), game.GetColor()); // display answer
+      } else {
+        action_ = 1; // continue playing game
       }
-      return;
-    }
-
-    // display state of previous game
-    const Game &game = wordle_.GetGames()[game_index_];
-    for (size_t i = 0; i < tiles_.size(); i++) {
-      for (size_t j = 0; j < tiles_[i].size(); j++) {
-
-        if (i >= game.GetGuessCount()) {
-          ResetTile(i, j);
-        } else {
-          const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
-          tiles_[i][j].SetColor(letter.GetColor());
-          tiles_[i][j].SetLabel(std::string(1, letter.ToChar()));
-        }
-
-        DrawTile(tiles_[i][j]);
-      }
-    }
-
-    if (game.IsComplete()) {
-      DrawAnswerBox(game.GetAnswer().ToString(), game.GetColor()); // display answer
-    } else {
-      action_ = 1; // continue playing game
+      break;
     }
     
-  // view statistics
-  } else if (action_ == 4) {
-    std::string message = "Statistics:\n \n"
-                          "Games Played: " + std::to_string(wordle_.GetStatistics().GetGamesPlayed()) + "\n"
-                          "Win Percentage: " + std::to_string(wordle_.GetStatistics().GetWinPercentage()) + "\n"
-                          "Current Streak: " + std::to_string(wordle_.GetStatistics().GetCurrentStreak()) + "\n"
-                          "Max Streak: " + std::to_string(wordle_.GetStatistics().GetMaxStreak()) + "\n \n"
-                          "Guess Distribution:\n";
-
-    for (size_t i = 0; i < tiles_.size(); i++) {
-      message += std::to_string(i + 1) + ": " + std::to_string(wordle_.GetStatistics().GetGuessDistribution(i)) + "\n";
-    }
-    
-    ci::gl::drawStringCentered(message, ci::vec2(kWindowWidth/2, kMargin),
-                               ci::Color("white"), ci::Font("Roboto", 50.0));
-    
-  // quit
-  } else if (action_ == 5) {
-    ci::gl::clear(ci::Color::black());
+    case 4:
+      DisplayStatistics();
+      break;
   }
 }
 
@@ -115,7 +70,7 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
 void WordleApp::keyDown(ci::app::KeyEvent event) {
   // is a letter and haven't finished guess
   if (isalpha(event.getCode()) && guess_size_ < wordle_.GetNumLetters()) {
-    guess_ += event.getChar(); // TODO: sanitize
+    guess_ += tolower(event.getChar());
     tiles_[guess_count_][guess_size_++].SetLabel(std::string(1, event.getChar()));
     
   // is a return and have finished guess
@@ -180,11 +135,19 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
   
 }
 
+void WordleApp::DrawTiles() const {
+  for (size_t i = 0; i < tiles_.size(); i++) {
+    for (size_t j = 0; j < tiles_[i].size(); j++) {
+      DrawTile(tiles_[i][j]);
+    }
+  }
+}
+
 void WordleApp::DrawTile(const wordle::Tile &tile) const {
   ci::gl::color(ci::Color(&(tile.GetColor()[0])));
   ci::gl::drawSolidRect(tile.GetSquare());
   ci::gl::drawString(tile.GetLabel(), tile.GetSquare().getCenter() - ci::vec2(15.0, 15.0),
-                     ci::Color("black"), ci::Font("Roboto", 50.0));
+                     ci::Color("black"), ci::Font("Arial", 50.0));
 }
 
 void WordleApp::DrawAnswerBox(const std::string& answer, const std::string& color) const {
@@ -193,7 +156,48 @@ void WordleApp::DrawAnswerBox(const std::string& answer, const std::string& colo
                                    ci::vec2(kWindowWidth/2 + 2*kMargin, 1125));
   ci::gl::drawSolidRect(answer_box);
   ci::gl::drawString(answer, answer_box.getCenter() - ci::vec2(60.0, 25.0),
-                     ci::Color("black"), ci::Font("Roboto", 50.0));
+                     ci::Color("black"), ci::Font("Arial", 50.0));
+}
+
+void WordleApp::DisplayHomePage() {
+  std::string message = "Welcome to Wordle!\n \n"
+                        "Please enter a number:\n "
+                        "1 to start a new game\n "
+                        "2 to visit a previous game\n "
+                        "3 to view the instructions\n "
+                        "4 to view the statistics\n "
+                        "5 to quit\n \n"
+                        "ESC anytime to return";
+  ci::gl::drawStringCentered(message, ci::vec2(kWindowWidth/2, kMargin),
+                             ci::Color("white"), ci::Font("Arial", 50.0));
+}
+
+void WordleApp::DisplayGameSelection() {
+  for (size_t i = 0; i < wordle_.GetGameCount(); i++) {
+    std::string game_color = wordle_.GetGames()[i].GetColor();
+    Tile tile = Tile(std::to_string(i + 1), game_color, tiles_[i / 6][i % 5].GetSquare());
+    DrawTile(tile);
+  }
+}
+
+void WordleApp::DisplayStatistics() {
+  std::string message = "Statistics:\n \n"
+                        "Games Played: " + std::to_string(wordle_.GetStatistics().GetGamesPlayed()) + "\n"
+                        "Win Percentage: " + std::to_string(wordle_.GetStatistics().GetWinPercentage()) + "\n"
+                        "Current Streak: " + std::to_string(wordle_.GetStatistics().GetCurrentStreak()) + "\n"
+                        "Max Streak: " + std::to_string(wordle_.GetStatistics().GetMaxStreak()) + "\n \n"
+                        "Guess Distribution:\n";
+  
+  for (size_t i = 0; i < tiles_.size(); i++) {
+    message += std::to_string(i + 1) + ": " + std::to_string(wordle_.GetStatistics().GetGuessDistribution(i)) + "\n";
+  }
+
+  ci::gl::drawStringCentered(message, ci::vec2(kWindowWidth/2, kMargin),
+                             ci::Color("white"), ci::Font("Arial", 50.0));
+}
+
+void WordleApp::ClearScreen() {
+  ci::gl::clear(ci::Color::black());
 }
 
 void WordleApp::ResetTiles() {
@@ -209,8 +213,18 @@ void WordleApp::ResetTiles(size_t row) {
 }
 
 void WordleApp::ResetTile(size_t row, size_t col) {
-  tiles_[row][col].SetLabel(" ");
-  tiles_[row][col].SetColor("gray");
+  tiles_[row][col].SetLabelAndColor(" ", "gray");
+}
+
+void WordleApp::UpdateTiles(const Game& game) {
+  ResetTiles();
+  
+  for (size_t i = 0; i < game.GetGuessCount(); i++) {
+    for (size_t j = 0; j < tiles_[i].size(); j++) {
+      const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
+      tiles_[i][j].SetLabelAndColor(std::string(1, letter.ToChar()), letter.GetColor());
+    }
+  }
 }
 
 } // namespace visualizer

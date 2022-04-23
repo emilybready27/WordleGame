@@ -9,6 +9,7 @@ class Tile {
 public:
   Tile(const std::string& label, const std::string& color, const ci::Rectf& square);
   
+  void SetLabelAndColor(const std::string& label, const std::string& color);
   void SetLabel(const std::string& label);
   const std::string& GetLabel() const;
   void SetColor(const std::string& color);
