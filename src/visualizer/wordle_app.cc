@@ -56,7 +56,7 @@ void WordleApp::draw() {
       }
       break;
     }
-    
+
     case 4:
       DisplayStatistics();
       break;
@@ -68,16 +68,18 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
 }
 
 void WordleApp::keyDown(ci::app::KeyEvent event) {
-  // is a letter and haven't finished guess
-  if (isalpha(event.getCode()) && guess_size_ < wordle_.GetNumLetters()) {
+  // entered a letter and haven't finished guess
+  if (isalpha(event.getCharUtf32()) && guess_size_ < wordle_.GetNumLetters()) {
     guess_ += tolower(event.getChar());
     tiles_[guess_count_][guess_size_++].SetLabel(std::string(1, event.getChar()));
     
-  // is a return and have finished guess
-  } else if (event.getCode() == ci::app::KeyEvent::KEY_RETURN && guess_size_ == wordle_.GetNumLetters()) {
+  // entered a return and have finished guess
+  } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_RETURN && guess_size_ == wordle_.GetNumLetters()) {
     Game &game = wordle_.GetGames()[game_index_];
 
-    if (wordle_.GetDictionary().Contains(guess_)) { // valid word
+    if (!wordle_.GetDictionary().Contains(guess_)) { // invalid word
+      ResetTiles(guess_count_);
+    } else { // valid word
       game.Evaluate(guess_);
 
       // update tile colors
@@ -94,28 +96,26 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
         action_ = 2; // display answer
         game_chosen_ = true;
       }
-
-    } else { // invalid word
-      ResetTiles(guess_count_);
     }
 
     guess_ = "";
     guess_size_ = 0;
   
-  // entered a number for an action
-  } else if (isdigit(event.getCode())) {
-    std::string str = std::string(1, event.getChar());
-    size_t input = std::stoi(str);
+  // entered a number
+  } else if (isdigit(event.getCharUtf32())) {
+    size_t input = std::stoi(std::string(1, event.getChar()));
     
-    if (action_ == 2 && input >= 1 && input <= wordle_.GetGameCount()) {
-      game_chosen_ = true;
-      game_index_ = input - 1;
-      guess_count_ = wordle_.GetGames()[game_index_].GetGuessCount();
-      return;
-    } else if (action_ == 2) {
+    // input is a game index
+    if (action_ == 2) {
+      if (input >= 1 && input <= wordle_.GetGameCount()) {
+        game_chosen_ = true;
+        game_index_ = input - 1;
+        guess_count_ = wordle_.GetGames()[game_index_].GetGuessCount();
+      }
       return;
     }
 
+    // input is an action
     action_ = input;
     if (action_ == 1) {
       wordle_.AddGame();
@@ -128,10 +128,12 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
       exit(0);
     }
 
-  } else if (event.getCode() == ci::app::KeyEvent::KEY_ESCAPE) {
+  } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_ESCAPE) {
     action_ = 0;
+  } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_BACKSPACE && guess_size_ > 0) {
+    guess_.pop_back();
+    tiles_[guess_count_][--guess_size_].SetLabel(" ");
   }
-  // TODO: ci::app::KeyEvent::KEY_DELETE:
   
 }
 
