@@ -60,7 +60,7 @@ void WordleApp::draw() {
 }
 
 void WordleApp::mouseDown(ci::app::MouseEvent event) {
-  AppBase::mouseDown(event);
+  
 }
 
 void WordleApp::keyDown(ci::app::KeyEvent event) {

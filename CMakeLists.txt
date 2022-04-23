@@ -61,6 +61,7 @@ list(APPEND CORE_SOURCE_FILES src/core/wordle.cc
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         src/visualizer/wordle_app.cc
         src/visualizer/tile.cc
+        src/visualizer/page.cc
         src/visualizer/home_page.cc
         src/visualizer/board_page.cc
         src/visualizer/selection_page.cc

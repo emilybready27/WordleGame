@@ -3,18 +3,18 @@
 #include <vector>
 #include "cinder/gl/gl.h"
 #include "tile.h"
+#include "page.h"
 
 namespace wordle {
 
 namespace visualizer {
 
-class HomePage {
+class HomePage : public Page {
  public:
   HomePage() = default;
   HomePage(double margin, double window_width, double window_height);
   
-  void Draw() const;
-  void DrawTile(const Tile& tile) const;
+  void Draw() const override;
   
   const Tile &GetWelcomeBox() const;
   const Tile &GetNewGameBox() const;

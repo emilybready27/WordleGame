@@ -4,20 +4,20 @@
 #include "cinder/gl/gl.h"
 #include "tile.h"
 #include "core/game.h"
+#include "page.h"
 
 namespace wordle {
 
 namespace visualizer {
 
-class BoardPage {
+class BoardPage : public Page {
  public:
   BoardPage() = default;
   BoardPage(double margin, double window_width, double window_height,
             size_t num_guesses, size_t num_letters);
   
-  void Draw() const;
+  void Draw() const override;
   void Draw(const Game& game);
-  void DrawTile(const Tile& tile) const;
   void DrawAnswer(const std::string& answer, const std::string& color);
 
   void ResetBoardTiles();

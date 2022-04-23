@@ -32,15 +32,6 @@ void SelectionPage::Draw() const {
   }
 }
 
-void SelectionPage::DrawTile(const Tile& tile) const {
-  ci::gl::color(ci::Color(&(tile.GetColor()[0])));
-  ci::gl::drawSolidRect(tile.GetBounds());
-  ci::gl::drawStringCentered(tile.GetLabel(),
-                             tile.GetBounds().getCenter() - ci::vec2(0, tile.GetBounds().getHeight() / 4),
-                             ci::Color("black"),
-                             ci::Font("Arial", 50.0));
-}
-
 void SelectionPage::AddGame(size_t game_index) {
   selection_[game_index / 5][game_index % 5].SetLabel(std::to_string(game_index + 1));
   selection_[game_index / 5][game_index % 5].SetColor("gray");

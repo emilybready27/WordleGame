@@ -34,15 +34,6 @@ void HomePage::Draw() const {
   DrawTile(statistics_box_);
 }
 
-void HomePage::DrawTile(const Tile& tile) const {
-  ci::gl::color(ci::Color(&(tile.GetColor()[0])));
-  ci::gl::drawSolidRect(tile.GetBounds());
-  ci::gl::drawStringCentered(tile.GetLabel(),
-                             tile.GetBounds().getCenter() - ci::vec2(0, tile.GetBounds().getHeight() / 4),
-                             ci::Color("black"),
-                             ci::Font("Arial", 50.0));
-}
-
 const Tile &HomePage::GetWelcomeBox() const {
   return welcome_box_;
 }

@@ -3,19 +3,19 @@
 #include <vector>
 #include "cinder/gl/gl.h"
 #include "tile.h"
+#include "page.h"
 
 namespace wordle {
 
 namespace visualizer {
 
-class SelectionPage {
+class SelectionPage : public Page {
  public:
   SelectionPage() = default;
   SelectionPage(double margin, double window_width, double window_height,
             size_t num_guesses, size_t num_letters);
   
-  void Draw() const;
-  void DrawTile(const Tile& tile) const;
+  void Draw() const override;
   
   void AddGame(size_t game_index);
 
