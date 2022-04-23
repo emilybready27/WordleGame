@@ -4,6 +4,9 @@
 #include "cinder/gl/gl.h"
 #include "tile.h"
 #include "core/game.h"
+#include "home_page.h"
+#include "board_page.h"
+#include "selection_page.h"
 
 namespace wordle {
 
@@ -23,18 +26,20 @@ class Layout {
          const std::string &correct_color,
          const std::string &incorrect_color);
   
-  void DrawBoard() const;
-  void DrawBoard(const Game& game);
-  void DrawGameSelection() const;
+  void DrawHomePage() const;
+  void DrawBoardPage() const;
+  void DrawBoardPage(const Game& game);
+  void DrawSelectionPage() const;
+  void DrawBoardAnswer(const std::string& answer, const std::string& color);
   
-  void AddGameTile(size_t game_index);
+  void AddGame(size_t game_index);
   
   void SetBoardTileLabel(size_t row, size_t col, const std::string& label);
   void SetBoardTileColor(size_t row, size_t col, const std::string& color);
   void ResetBoardTiles();
   void ResetBoardTiles(size_t row);
   
-  void SetGameTileColor(size_t idx, const std::string& color);
+  void SetSelectionTileColor(size_t idx, const std::string& color);
     
  private:
   double window_width_;
@@ -46,13 +51,15 @@ class Layout {
   std::string semi_correct_color_;
   std::string correct_color_;
   std::string incorrect_color_;
-
-  std::vector<std::vector<Tile>> board_;
-  std::vector<Tile> games_;
-  //std::vector<std::vector<Tile>> keyboard_;
   
-  void ConstructBoard();
-  void ConstructGames();
+  HomePage home_page_;
+  BoardPage board_page_;
+  SelectionPage selection_page_;
+  //HomePage statistics_page_;
+  //HomePage instructions_page_;
+  
+  
+  void ConstructSelectionPage();
   void DrawTile(const Tile& tile) const;
     
 };

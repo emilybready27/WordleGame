@@ -3,7 +3,7 @@
 namespace wordle {
 
 namespace visualizer {
-    
+
 Layout::Layout(double window_width,
                double window_height,
                double margin,
@@ -23,93 +23,96 @@ Layout::Layout(double window_width,
   semi_correct_color_ = semi_correct_color;
   correct_color_ = correct_color;
   incorrect_color_ = incorrect_color;
-  
-  ConstructBoard();
-  ConstructGames();
+
+  home_page_ = HomePage(margin_, window_width_, window_height_);
+  board_page_ = BoardPage(margin_, window_width_, window_height_,
+                          num_guesses_, num_letters_);
+  selection_page_ = SelectionPage(margin_, window_width_, window_height_,
+                                  num_guesses_, num_letters_);
 }
 
-void Layout::ConstructBoard() {
-  double tile_size = (window_width_ - 4*margin_) / num_letters_;
-  for (size_t i = 0; i < num_guesses_; i++) {
-    board_.emplace_back(std::vector<Tile>());
-    for (size_t j = 0; j < num_letters_; j++) {
-      ci::vec2 coords = ci::vec2(margin_ + (tile_size + margin_/2)*j,
-                                 margin_ + (tile_size + margin_/2)*i);
-      ci::Rectf square = ci::Rectf(coords, coords + ci::vec2(tile_size, tile_size));
+// TODO: magic numbers
+// TODO: handle > 30 games
+void Layout::AddGame(size_t game_index) {
+  selection_page_.AddGame(game_index);
+}
 
-      board_[i].emplace_back(" ", default_color_, square);
+void Layout::DrawHomePage() const {
+  DrawTile(home_page_.GetWelcomeBox());
+  DrawTile(home_page_.GetNewGameBox());
+  DrawTile(home_page_.GetOldGameBox());
+  DrawTile(home_page_.GetInstructionsBox());
+  DrawTile(home_page_.GetStatisticsBox());
+}
+
+void Layout::DrawBoardPage() const {
+  DrawTile(board_page_.GetHomeBox());
+
+  for (size_t i = 0; i < num_guesses_; i++) {
+    for (size_t j = 0; j < num_letters_; j++) {
+      DrawTile(board_page_.GetBoard()[i][j]);
     }
   }
 }
 
-void Layout::ConstructGames() {
-  games_ = std::vector<Tile>();
-}
-
-void Layout::AddGameTile(size_t game_index) {
-  Tile tile = Tile(std::to_string(game_index + 1),
-                   default_color_,
-                   board_[game_index / 5][game_index % 5].GetSquare()); // TODO: magic number, handle > 30 games
-  games_.push_back(tile);
-}
-
-void Layout::DrawBoard() const {
-  for (size_t i = 0; i < num_guesses_; i++) {
-    for (size_t j = 0; j < num_letters_; j++) {
-      DrawTile(board_[i][j]);
-    }
-  }
-}
-
-void Layout::DrawBoard(const Game& game) {
+void Layout::DrawBoardPage(const Game& game) {
   ResetBoardTiles();
   
   for (size_t i = 0; i < game.GetGuessCount(); i++) {
-    for (size_t j = 0; j < board_[i].size(); j++) {
+    for (size_t j = 0; j < 5; j++) {
       const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
-      board_[i][j].SetLabelAndColor(std::string(1, letter.ToChar()), letter.GetColor());
+      board_page_.SetBoardTile(i, j, std::string(1, letter.ToChar()), letter.GetColor());
     }
   }
   
-  DrawBoard();
+  DrawBoardPage();
 }
 
-void Layout::DrawGameSelection() const {
-  for (size_t i = 0; i < games_.size(); i++) {
-    DrawTile(games_[i]);
+void Layout::DrawSelectionPage() const {
+  for (size_t i = 0; i < 6; i++) {
+    for (size_t j = 0; j < 5; j++) {
+      DrawTile(selection_page_.GetSelection()[i][j]);
+    }
   }
+}
+
+void Layout::DrawBoardAnswer(const std::string& answer, const std::string& color) {
+  board_page_.SetAnswerBox(answer, color);
+  DrawTile(board_page_.GetAnswerBox());
 }
 
 void Layout::DrawTile(const Tile& tile) const {
   ci::gl::color(ci::Color(&(tile.GetColor()[0])));
-  ci::gl::drawSolidRect(tile.GetSquare());
-  ci::gl::drawString(tile.GetLabel(), tile.GetSquare().getCenter() - ci::vec2(15.0, 15.0),
-                     ci::Color("black"), ci::Font("Arial", 50.0));
+  ci::gl::drawSolidRect(tile.GetBounds());
+  ci::gl::drawStringCentered(tile.GetLabel(),
+                             tile.GetBounds().getCenter() - ci::vec2(0, tile.GetBounds().getHeight() / 4),
+                             ci::Color("black"),
+                             ci::Font("Arial", 50.0));
 }
 
 void Layout::SetBoardTileLabel(size_t row, size_t col, const std::string& label) {
-  board_[row][col].SetLabel(label);
+  board_page_.SetBoardTileLabel(row, col, label);
 }
 
 void Layout::SetBoardTileColor(size_t row, size_t col, const std::string &color) {
-  board_[row][col].SetColor(color);
+  board_page_.SetBoardTileColor(row, col, color);
 }
 
 void Layout::ResetBoardTiles() {
-  for (size_t i = 0; i < board_.size(); i++) {
+  for (size_t i = 0; i < 6; i++) {
     ResetBoardTiles(i);
   }
 }
 
 void Layout::ResetBoardTiles(size_t row) {
-  for (size_t col = 0; col < board_[row].size(); col++) {
+  for (size_t col = 0; col < 5; col++) {
     SetBoardTileColor(row, col, default_color_);
     SetBoardTileLabel(row, col, " ");
   }
 }
 
-void Layout::SetGameTileColor(size_t idx, const std::string &color) {
-  games_[idx].SetColor(color);
+void Layout::SetSelectionTileColor(size_t idx, const std::string &color) {
+  selection_page_.SetSelectionTileColor(idx, color);
 }
 
 } // namespace visualizer

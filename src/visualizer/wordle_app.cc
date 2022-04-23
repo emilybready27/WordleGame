@@ -25,26 +25,26 @@ void WordleApp::draw() {
   
   switch (action_) {
     case 0:
-      DisplayHomePage();
+      layout_.DrawHomePage();
       break;
       
     case 1:
-      layout_.DrawBoard();
+      layout_.DrawBoardPage();
       break;
       
     case 2: {
       if (!game_chosen_) {
-        layout_.DrawGameSelection();
+        layout_.DrawSelectionPage();
         break;
       }
 
       const Game &game = wordle_.GetGames()[game_index_];
-      layout_.DrawBoard(game);
+      layout_.DrawBoardPage(game);
 
-      if (game.IsComplete()) {
-        DrawAnswerBox(game.GetAnswer().ToString(), game.GetColor()); // display answer
-      } else {
-        action_ = 1; // continue playing game
+      if (game.IsComplete()) { // display answer
+        layout_.DrawBoardAnswer(game.GetAnswer().ToString(), game.GetColor());
+      } else { // continue playing game
+        action_ = 1;
       }
       break;
     }
@@ -82,6 +82,7 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
         std::string color = game.GetBoard().GetLastWord().GetLetter(i).GetColor();
         layout_.SetBoardTileColor(guess_count_, i, color);
       }
+      layout_.SetSelectionTileColor(game_index_, game.GetColor());
       guess_count_++;
 
       // game over
@@ -91,8 +92,6 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
         action_ = 2; // display answer
         game_chosen_ = true;
       }
-      
-      layout_.SetGameTileColor(game_index_, game.GetColor());
     }
 
     guess_ = "";
@@ -121,7 +120,7 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
       guess_count_ = 0;
       game_index_ = wordle_.GetGameCount() - 1;
       layout_.ResetBoardTiles();
-      layout_.AddGameTile(game_index_);
+      layout_.AddGame(game_index_);
     } else if (action_ == 2) {
       game_chosen_ = false;
     } else if (action_ == 5) {
@@ -135,29 +134,6 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
     layout_.SetBoardTileLabel(guess_count_, --guess_size_, " ");
   }
   
-}
-
-
-void WordleApp::DrawAnswerBox(const std::string& answer, const std::string& color) const {
-  ci::gl::color(ci::Color(&(color[0])));
-  ci::Rectf answer_box = ci::Rectf(ci::vec2(kWindowWidth/2 - 2*kMargin, 1025),
-                                   ci::vec2(kWindowWidth/2 + 2*kMargin, 1125));
-  ci::gl::drawSolidRect(answer_box);
-  ci::gl::drawString(answer, answer_box.getCenter() - ci::vec2(60.0, 25.0),
-                     ci::Color("black"), ci::Font("Arial", 50.0));
-}
-
-void WordleApp::DisplayHomePage() {
-  std::string message = "Welcome to Wordle!\n \n"
-                        "Please enter a number:\n "
-                        "1 to start a new game\n "
-                        "2 to visit a previous game\n "
-                        "3 to view the instructions\n "
-                        "4 to view the statistics\n "
-                        "5 to quit\n \n"
-                        "ESC anytime to return";
-  ci::gl::drawStringCentered(message, ci::vec2(kWindowWidth/2, kMargin),
-                             ci::Color("white"), ci::Font("Arial", 50.0));
 }
 
 void WordleApp::DisplayStatistics() {

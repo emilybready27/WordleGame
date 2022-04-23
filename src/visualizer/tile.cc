@@ -2,10 +2,10 @@
 
 namespace wordle {
     
-Tile::Tile(const std::string& label, const std::string& color, const ci::Rectf& square) {
+Tile::Tile(const std::string& label, const std::string& color, const ci::Rectf& bounds) {
   label_ = label;
   color_ = color;
-  square_ = square;
+  bounds_ = bounds;
 }
 
 void Tile::SetLabelAndColor(const std::string &label, const std::string &color) {
@@ -29,8 +29,8 @@ const std::string& Tile::GetColor() const {
   return color_;
 }
 
-const ci::Rectf& Tile::GetSquare() const {
-  return square_;
+const ci::Rectf& Tile::GetBounds() const {
+  return bounds_;
 }
 
 }
