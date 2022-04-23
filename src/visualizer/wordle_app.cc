@@ -14,6 +14,7 @@ WordleApp::WordleApp() : wordle_() {
                           wordle_.GetNumGuesses(), wordle_.GetNumLetters());
   selection_page_ = SelectionPage(kMargin, kWindowWidth, kWindowHeight,
                                   wordle_.GetNumGuesses(), wordle_.GetNumLetters());
+  statistics_page_ = StatisticsPage(kMargin, kWindowWidth, kWindowHeight);
   
   guess_ = "";
   guess_size_ = 0;
@@ -53,7 +54,7 @@ void WordleApp::draw() {
     }
 
     case 4:
-      DisplayStatistics();
+      statistics_page_.Draw(wordle_.GetStatistics());
       break;
   }
 }
@@ -137,22 +138,6 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
     board_page_.SetBoardTileLabel(guess_count_, --guess_size_, " ");
   }
   
-}
-
-void WordleApp::DisplayStatistics() {
-  std::string message = "Statistics:\n \n"
-                        "Games Played: " + std::to_string(wordle_.GetStatistics().GetGamesPlayed()) + "\n"
-                        "Win Percentage: " + std::to_string(wordle_.GetStatistics().GetWinPercentage()) + "\n"
-                        "Current Streak: " + std::to_string(wordle_.GetStatistics().GetCurrentStreak()) + "\n"
-                        "Max Streak: " + std::to_string(wordle_.GetStatistics().GetMaxStreak()) + "\n \n"
-                        "Guess Distribution:\n";
-  
-  for (size_t i = 0; i < wordle_.GetNumGuesses(); i++) {
-    message += std::to_string(i + 1) + ": " + std::to_string(wordle_.GetStatistics().GetGuessDistribution(i)) + "\n";
-  }
-
-  ci::gl::drawStringCentered(message, ci::vec2(kWindowWidth/2, kMargin),
-                             ci::Color("white"), ci::Font("Arial", 50.0));
 }
 
 void WordleApp::ClearScreen() {

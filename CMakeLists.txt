@@ -63,7 +63,8 @@ list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         src/visualizer/tile.cc
         src/visualizer/home_page.cc
         src/visualizer/board_page.cc
-        src/visualizer/selection_page.cc)
+        src/visualizer/selection_page.cc
+        src/visualizer/statistics_page.cc)
 
 list(APPEND TEST_FILES tests/test_wordle.cc
                        tests/test_board.cc

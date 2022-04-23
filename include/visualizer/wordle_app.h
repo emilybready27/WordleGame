@@ -7,6 +7,7 @@
 #include "home_page.h"
 #include "board_page.h"
 #include "selection_page.h"
+#include "statistics_page.h"
 #include "tile.h"
 
 namespace wordle {
@@ -31,7 +32,7 @@ private:
   HomePage home_page_;
   BoardPage board_page_;
   SelectionPage selection_page_;
-  //StatisticsPage statistics_page_;
+  StatisticsPage statistics_page_;
   //InstructionsPage instructions_page_;
   
   std::string guess_;
