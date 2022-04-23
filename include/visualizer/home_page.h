@@ -14,6 +14,7 @@ class HomePage : public Page {
   HomePage() = default;
   HomePage(double margin, double window_width, double window_height);
   
+  std::string GetType() const override;
   void Draw() const override;
   
   const Tile &GetWelcomeBox() const;

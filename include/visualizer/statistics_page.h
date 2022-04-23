@@ -14,6 +14,7 @@ class StatisticsPage : public Page {
   StatisticsPage() = default;
   StatisticsPage(double margin, double window_width, double window_height);
   
+  std::string GetType() const override;
   void Draw() const override;
   void Draw(const Statistics& statistics);
     

@@ -24,6 +24,10 @@ StatisticsPage::StatisticsPage(double margin, double window_width, double window
   //guess_distribution_box_;
 }
 
+std::string StatisticsPage::GetType() const {
+  return "statistics";
+}
+
 void StatisticsPage::Draw() const {
   DrawTile(title_box_);
   DrawTile(statistics_box_);

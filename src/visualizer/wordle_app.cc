@@ -15,6 +15,7 @@ WordleApp::WordleApp() : wordle_() {
   selection_page_ = SelectionPage(kMargin, kWindowWidth, kWindowHeight,
                                   wordle_.GetNumGuesses(), wordle_.GetNumLetters());
   statistics_page_ = StatisticsPage(kMargin, kWindowWidth, kWindowHeight);
+  current_page_ = "home";
   
   guess_ = "";
   guess_size_ = 0;
@@ -59,9 +60,9 @@ void WordleApp::draw() {
   }
 }
 
-void WordleApp::mouseDown(ci::app::MouseEvent event) {
-  
-}
+//void WordleApp::mouseDown(ci::app::MouseEvent event) {
+//  if ()
+//}
 
 void WordleApp::keyDown(ci::app::KeyEvent event) {
   // entered a letter and haven't finished guess

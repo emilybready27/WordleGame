@@ -16,6 +16,7 @@ class BoardPage : public Page {
   BoardPage(double margin, double window_width, double window_height,
             size_t num_guesses, size_t num_letters);
   
+  std::string GetType() const override;
   void Draw() const override;
   void Draw(const Game& game);
   void DrawAnswer(const std::string& answer, const std::string& color);

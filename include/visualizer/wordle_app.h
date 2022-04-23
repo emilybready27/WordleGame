@@ -19,7 +19,7 @@ public:
   WordleApp();
 
   void draw() override;
-  void mouseDown(ci::app::MouseEvent event) override;
+//  void mouseDown(ci::app::MouseEvent event) override;
   void keyDown(ci::app::KeyEvent event) override;
 
   const double kWindowWidth = 875;
@@ -34,6 +34,7 @@ private:
   SelectionPage selection_page_;
   StatisticsPage statistics_page_;
   //InstructionsPage instructions_page_;
+  std::string current_page_;
   
   std::string guess_;
   size_t guess_size_;

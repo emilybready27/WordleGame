@@ -27,6 +27,10 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
   }
 }
 
+std::string BoardPage::GetType() const {
+  return "board";
+}
+
 void BoardPage::Draw() const {
   DrawTile(home_box_);
 
