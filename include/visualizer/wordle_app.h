@@ -31,6 +31,11 @@ private:
   size_t guess_count_;
   size_t action_;
   
+  void DrawTile(const Tile& tile) const;
+  void DrawAnswerBox(const std::string& answer) const;
+  void ResetTiles();
+  void ResetTiles(size_t row);
+  
 };
 
 } // namespace visualizer
