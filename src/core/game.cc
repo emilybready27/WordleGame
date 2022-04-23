@@ -50,7 +50,7 @@ const std::string& Game::GetColor() const {
     return correct_color_;
   } else if (guess_count_ == num_guesses_) {
     return incorrect_color_;
-  } else {
+  } else { // TODO: set to default color when no yellow letters yet
     return semi_correct_color_;
   }
 }
