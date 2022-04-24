@@ -25,10 +25,13 @@ class StatisticsPage : public Page {
   Tile win_percentage_box_;
   Tile current_streak_box_;
   Tile max_streak_box_;
-  // TODO: Tile guess_distribution_box_;
-  // TODO: Tile home_box_;
   
-  // TODO: Histogram histogram_
+  Tile guess_distribution_box_;
+  std::vector<Tile> counts_;
+  std::vector<Tile> shaded_bars_;
+  std::vector<Tile> labels_;
+  Tile label_box_;
+  // TODO: Tile home_box_; next to title_box_
 };
 
 } // namespace visualizer

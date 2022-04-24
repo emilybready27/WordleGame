@@ -6,22 +6,44 @@ namespace wordle {
 namespace visualizer {
 
 StatisticsPage::StatisticsPage(double margin, double window_width, double window_height) {
-  title_box_ = Tile("Statistics", "indigo", ci::Rectf(ci::vec2(margin, margin),
+  title_box_ = Tile("Statistics", "violet", ci::Rectf(ci::vec2(margin, margin),
                                                     ci::vec2(window_width - margin, margin + 100)));
   
-  statistics_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin, 2*margin + 100),
-                                                ci::vec2(window_width - margin, margin + 450)));
+  statistics_box_ = Tile(" ", "gray", ci::Rectf(ci::vec2(margin, 1.5*margin + 100),
+                                                ci::vec2(window_width - margin, margin + 400)));
 
   double width = statistics_box_.GetBounds().getWidth();
-  games_played_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin, 2*margin + 100),
-                                                  ci::vec2(margin + width/4, 2*margin + 300)));
-  win_percentage_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin + width/4, 2*margin + 100),
-                                                    ci::vec2(margin + width/2, 2*margin + 300)));
-  current_streak_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin + width/2, 2*margin + 100),
-                                                    ci::vec2(margin + 3*width/4, 2*margin + 300)));
-  max_streak_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin + 3*width/4, 2*margin + 100),
-                                                ci::vec2(margin + width, 2*margin + 300)));
-  //guess_distribution_box_;
+  games_played_box_ = Tile(" ", "violet", ci::Rectf(ci::vec2(margin, 1.5*margin + 100),
+                                                  ci::vec2(margin + width/4, margin + 400)));
+  win_percentage_box_ = Tile(" ", "violet", ci::Rectf(ci::vec2(margin + width/4, 1.5*margin + 100),
+                                                    ci::vec2(margin + width/2, margin + 400)));
+  current_streak_box_ = Tile(" ", "violet", ci::Rectf(ci::vec2(margin + width/2, 1.5*margin + 100),
+                                                    ci::vec2(margin + 3*width/4, margin + 400)));
+  max_streak_box_ = Tile(" ", "violet", ci::Rectf(ci::vec2(margin + 3*width/4, 1.5*margin + 100),
+                                                ci::vec2(margin + width, margin + 400)));
+  
+  guess_distribution_box_ = Tile(" ", "gray", ci::Rectf(ci::vec2(margin, margin + 500),
+                                                        ci::vec2(window_width - margin, margin + 800)));
+  
+  double height = guess_distribution_box_.GetBounds().getHeight();
+  for (size_t i = 0; i < 6; i++) {
+    counts_.emplace_back(std::to_string(0), "gray", ci::Rectf(ci::vec2(margin + i*width/6,
+                                                                       margin + 450),
+                                                            ci::vec2(margin + (i+1)*width/6,
+                                                                     margin + 500)));
+    shaded_bars_.emplace_back(" ", "lime", ci::Rectf(ci::vec2(counts_[i].GetBounds().x1,
+                                                               margin + 795),
+                                                      ci::vec2(counts_[i].GetBounds().x2,
+                                                               margin + 800)));
+    labels_.emplace_back(std::to_string(i + 1), "violet", ci::Rectf(ci::vec2(counts_[i].GetBounds().x1,
+                                                                           margin + 800),
+                                                                  ci::vec2(counts_[i].GetBounds().x2,
+                                                                           margin + 850)));
+  }
+  
+  
+  label_box_ = Tile("Guess Distribution", "violet", ci::Rectf(ci::vec2(margin, margin + 850),
+                                                              ci::vec2(window_width - margin, margin + 900)));
 }
 
 std::string StatisticsPage::GetType() const {
@@ -35,6 +57,14 @@ void StatisticsPage::Draw() const {
   DrawTile(win_percentage_box_);
   DrawTile(current_streak_box_);
   DrawTile(max_streak_box_);
+  DrawTile(guess_distribution_box_);
+  DrawTile(label_box_);
+  
+  for (size_t i = 0; i < counts_.size(); i++) {
+    DrawTile(counts_[i]);
+    DrawTile(shaded_bars_[i]);
+    DrawTile(labels_[i]);
+  }
 }
     
 void StatisticsPage::Draw(const Statistics& statistics) {
@@ -43,9 +73,18 @@ void StatisticsPage::Draw(const Statistics& statistics) {
   current_streak_box_.SetLabel("Current\nStreak:\n" + std::to_string(statistics.GetCurrentStreak()));
   max_streak_box_.SetLabel("Max\nStreak:\n" + std::to_string(statistics.GetMaxStreak()));
 
-//  for (size_t i = 0; i < wordle_.GetNumGuesses(); i++) {
-//    message += std::to_string(i + 1) + ": " + std::to_string(wordle_.GetStatistics().GetGuessDistribution(i)) + "\n";
-//  }
+  for (size_t i = 0; i < statistics.GetGuessDistribution().size(); i++) {
+    size_t win_count = statistics.GetGuessDistribution(i);
+    
+    // called continuously, only update if there's a change
+    if ((int) win_count > std::stoi(counts_[i].GetLabel())) {
+      counts_[i].SetLabel(std::to_string(win_count));
+      shaded_bars_[i].SetBounds(ci::Rectf(ci::vec2(shaded_bars_[i].GetBounds().x1,
+                                                   shaded_bars_[i].GetBounds().y1 - 10),
+                                          ci::vec2(shaded_bars_[i].GetBounds().x2,
+                                                   shaded_bars_[i].GetBounds().y2)));
+    }
+  }
 
   Draw();
 }

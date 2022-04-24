@@ -29,6 +29,10 @@ const std::string& Tile::GetColor() const {
   return color_;
 }
 
+void Tile::SetBounds(const ci::Rectf& bounds) {
+  bounds_ = bounds;
+}
+
 const ci::Rectf& Tile::GetBounds() const {
   return bounds_;
 }

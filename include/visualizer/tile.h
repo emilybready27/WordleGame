@@ -15,6 +15,7 @@ public:
   const std::string& GetLabel() const;
   void SetColor(const std::string& color);
   const std::string& GetColor() const;
+  void SetBounds(const ci::Rectf& bounds);
   const ci::Rectf& GetBounds() const;
   
 private:
