@@ -17,16 +17,19 @@ class SelectionPage : public Page {
   
   std::string GetType() const override;
   void Draw() const override;
+
+  bool HasMouseEvent(const ci::vec2& position) const;
+  size_t GetMouseEvent(const ci::vec2& position) const;
   
   void AddGame(size_t game_index);
 
   void SetSelectionColor(size_t idx, const std::string& color);
-  const Tile &GetHomeBox() const;
+//  const Tile &GetHomeBox() const;
   const std::vector<std::vector<Tile>> &GetSelection() const;
 
  private:
   std::vector<std::vector<Tile>> selection_;
-  Tile home_box_;
+  // TODO: Tile home_box_;
 };
 
 } // namespace visualizer

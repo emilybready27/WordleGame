@@ -5,8 +5,8 @@ namespace wordle {
 namespace visualizer {
  
 HomePage::HomePage(double margin, double window_width, double window_height) {
-  welcome_box_ = Tile("Welcome to Wordle!", "gray",
-                      ci::Rectf(ci::vec2(margin, margin),
+  title_box_ = Tile("Welcome to Wordle!", "gray",
+                    ci::Rectf(ci::vec2(margin, margin),
                                 ci::vec2(window_width - margin, margin + 100)));
   
   new_game_box_ = Tile("1: New Game", "gray",
@@ -31,15 +31,36 @@ std::string HomePage::GetType() const {
 }
 
 void HomePage::Draw() const {
-  DrawTile(welcome_box_);
+  DrawTile(title_box_);
   DrawTile(new_game_box_);
   DrawTile(old_game_box_);
   DrawTile(instructions_box_);
   DrawTile(statistics_box_);
 }
 
+bool HomePage::HasMouseEvent(const ci::vec2& position) const {
+  return IsInBounds(position, new_game_box_.GetBounds())
+         || IsInBounds(position, old_game_box_.GetBounds())
+         || IsInBounds(position, instructions_box_.GetBounds())
+         || IsInBounds(position, statistics_box_.GetBounds());
+}
+
+size_t HomePage::GetMouseEvent(const ci::vec2& position) const {
+  if (IsInBounds(position, new_game_box_.GetBounds())) {
+    return 1;
+  } else if (IsInBounds(position, old_game_box_.GetBounds())) {
+    return 2;
+  } else if (IsInBounds(position, instructions_box_.GetBounds())) {
+    return 3;
+  } else if (IsInBounds(position, statistics_box_.GetBounds())) {
+    return 4;
+  } else {
+    return 0;
+  }
+}
+
 const Tile &HomePage::GetWelcomeBox() const {
-  return welcome_box_;
+  return title_box_;
 }
 
 const Tile &HomePage::GetNewGameBox() const {

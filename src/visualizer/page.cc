@@ -12,6 +12,10 @@ void Page::DrawTile(const Tile& tile) const {
                              ci::Color("black"),
                              ci::Font("Arial", 50.0));
 }
+
+bool Page::IsInBounds(const ci::vec2& position, const ci::Rectf& bounds) const {
+  return position.x >= bounds.x1 && position.x <= bounds.x2 &&position.y >= bounds.y1 && position.y <= bounds.y2;
+}
     
 } // namespace visualizer
 

@@ -60,9 +60,23 @@ void WordleApp::draw() {
   }
 }
 
-//void WordleApp::mouseDown(ci::app::MouseEvent event) {
-//  if ()
-//}
+void WordleApp::mouseDown(ci::app::MouseEvent event) {
+  if (current_page_ == "home" && home_page_.HasMouseEvent(event.getPos())) {
+    action_ = home_page_.GetMouseEvent(event.getPos());
+    ProcessAction();
+    
+  } else if (current_page_ == "board") {
+    
+  } else if (current_page_ == "selection" && selection_page_.HasMouseEvent(event.getPos())) {
+    game_index_ = selection_page_.GetMouseEvent(event.getPos());
+    action_ = 2;
+    game_chosen_ = true;
+    current_page_ = "selection";
+    
+  } else if (current_page_ == "statistics") {
+    
+  }
+}
 
 void WordleApp::keyDown(ci::app::KeyEvent event) {
   // entered a letter and haven't finished guess
@@ -72,6 +86,7 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
     }
     guess_ += tolower(event.getChar());
     board_page_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, event.getChar()));
+    current_page_ = "board";
     
   // entered a return and have finished guess
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_RETURN && guess_size_ == wordle_.GetNumLetters()) {
@@ -96,11 +111,13 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
         guess_count_ = 0;
         action_ = 2; // display answer
         game_chosen_ = true;
+        current_page_ = "board";
       }
     }
 
     guess_ = "";
     guess_size_ = 0;
+    current_page_ = "board";
   
   // entered a number
   // TODO: handle inputs > 10
@@ -113,6 +130,7 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
         game_chosen_ = true;
         game_index_ = input - 1;
         guess_count_ = wordle_.GetGames()[game_index_].GetGuessCount();
+        current_page_ = "selection";
       }
       return;
     }
@@ -120,25 +138,41 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
     // TODO: replace user action inputs with buttons
     // input is an action
     action_ = input;
-    if (action_ == 1) {
-      wordle_.AddGame();
-      guess_count_ = 0;
-      game_index_ = wordle_.GetGameCount() - 1;
-      board_page_.ResetBoardTiles();
-      selection_page_.AddGame(game_index_);
-    } else if (action_ == 2) {
-      game_chosen_ = false;
-    } else if (action_ == 5) {
-      exit(0);
-    }
+    ProcessAction();
 
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_ESCAPE) {
     action_ = 0;
+    current_page_ = "home";
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_BACKSPACE && guess_size_ > 0) {
+    if (current_page_ != "board") {
+      return;
+    }
     guess_.pop_back();
     board_page_.SetBoardTileLabel(guess_count_, --guess_size_, " ");
   }
   
+}
+
+void WordleApp::ProcessAction() {
+  if (action_ == 0) {
+    current_page_ = "home";
+  } else if (action_ == 1) {
+    wordle_.AddGame();
+    guess_count_ = 0;
+    game_index_ = wordle_.GetGameCount() - 1;
+    board_page_.ResetBoardTiles();
+    selection_page_.AddGame(game_index_);
+    current_page_ = "board";
+  } else if (action_ == 2) {
+    game_chosen_ = false;
+    current_page_ = "selection";
+  } else if (action_ == 3) {
+    current_page_ = "instructions";
+  } else if (action_ == 4) {
+    current_page_ = "statistics";
+  } else if (action_ == 5) {
+    exit(0);
+  }
 }
 
 void WordleApp::ClearScreen() {

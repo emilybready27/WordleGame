@@ -16,6 +16,9 @@ class HomePage : public Page {
   
   std::string GetType() const override;
   void Draw() const override;
+
+  bool HasMouseEvent(const ci::vec2& position) const;
+  size_t GetMouseEvent(const ci::vec2& position) const;
   
   const Tile &GetWelcomeBox() const;
   const Tile &GetNewGameBox() const;
@@ -24,7 +27,7 @@ class HomePage : public Page {
   const Tile &GetStatisticsBox() const;
   
  private:
-  Tile welcome_box_;
+  Tile title_box_;
   Tile new_game_box_;
   Tile old_game_box_;
   Tile instructions_box_;
