@@ -8,10 +8,10 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
                      size_t num_guesses, size_t num_letters) {
   double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
   
-  answer_box_ = Tile(" ", "gray",
+  answer_box_ = Tile(" ", "black",
                      ci::Rectf(ci::vec2(margin + tile_size + margin/2, 1025),
                                ci::vec2(window_width - margin, 1125)));
-  home_box_ = Tile("Home", "gray",
+  home_box_ = Tile("home", "orange",
                    ci::Rectf(ci::vec2(margin, 1025),
                              ci::vec2(margin + tile_size, 1125)));
 
@@ -52,6 +52,14 @@ void BoardPage::Draw(const Game& game) {
   }
 
   Draw();
+}
+
+bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
+  return IsInBounds(position, home_box_.GetBounds());
+}
+
+size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
+  return 0;
 }
 
 void BoardPage::ResetBoardTiles() {

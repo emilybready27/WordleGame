@@ -51,6 +51,7 @@ void WordleApp::draw() {
       } else { // continue playing game
         action_ = 1;
       }
+      current_page_ = "board";
       break;
     }
 
@@ -65,11 +66,14 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     action_ = home_page_.GetMouseEvent(event.getPos());
     ProcessAction();
     
-  } else if (current_page_ == "board") {
+  } else if (current_page_ == "board" && board_page_.HasMouseEvent(event.getPos())) {
+    action_ = home_page_.GetMouseEvent(event.getPos());
+    ProcessAction();
     
   } else if (current_page_ == "selection" && selection_page_.HasMouseEvent(event.getPos())) {
     game_index_ = selection_page_.GetMouseEvent(event.getPos());
     action_ = 2;
+    guess_count_ = wordle_.GetGames()[game_index_].GetGuessCount();
     game_chosen_ = true;
     current_page_ = "selection";
     
@@ -118,31 +122,11 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
     guess_ = "";
     guess_size_ = 0;
     current_page_ = "board";
-  
-  // entered a number
-  // TODO: handle inputs > 10
-  } else if (isdigit(event.getCharUtf32())) {
-    size_t input = std::stoi(std::string(1, event.getChar()));
-    
-    // input is a game index
-    if (action_ == 2) {
-      if (input >= 1 && input <= wordle_.GetGameCount()) {
-        game_chosen_ = true;
-        game_index_ = input - 1;
-        guess_count_ = wordle_.GetGames()[game_index_].GetGuessCount();
-        current_page_ = "selection";
-      }
-      return;
-    }
-
-    // TODO: replace user action inputs with buttons
-    // input is an action
-    action_ = input;
-    ProcessAction();
 
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_ESCAPE) {
     action_ = 0;
     current_page_ = "home";
+    
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_BACKSPACE && guess_size_ > 0) {
     if (current_page_ != "board") {
       return;

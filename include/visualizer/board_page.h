@@ -21,6 +21,9 @@ class BoardPage : public Page {
   void Draw(const Game& game);
   void DrawAnswer(const std::string& answer, const std::string& color);
 
+  bool HasMouseEvent(const ci::vec2& position) const;
+  size_t GetMouseEvent(const ci::vec2& position) const;
+
   void ResetBoardTiles();
   void ResetBoardTiles(size_t row);
 

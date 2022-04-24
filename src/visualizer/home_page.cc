@@ -5,23 +5,23 @@ namespace wordle {
 namespace visualizer {
  
 HomePage::HomePage(double margin, double window_width, double window_height) {
-  title_box_ = Tile("Welcome to Wordle!", "gray",
+  title_box_ = Tile("Welcome to Wordle!", "teal",
                     ci::Rectf(ci::vec2(margin, margin),
                                 ci::vec2(window_width - margin, margin + 100)));
   
-  new_game_box_ = Tile("1: New Game", "gray",
+  new_game_box_ = Tile("1: New Game", "teal",
                        ci::Rectf(ci::vec2(margin, 2*margin + 100),
                                  ci::vec2(window_width/2 - margin/2, 2*margin + 200)));
   
-  old_game_box_ = Tile("2: Old Game", "gray",
+  old_game_box_ = Tile("2: Old Game", "teal",
                        ci::Rectf(ci::vec2(window_width/2 + margin/2, 2*margin + 100),
                                  ci::vec2(window_width - margin, 2*margin + 200)));
   
-  instructions_box_ = Tile("3: Instructions", "gray",
+  instructions_box_ = Tile("3: Instructions", "teal",
                            ci::Rectf(ci::vec2(margin, 2*margin + 200 + margin),
                                      ci::vec2(window_width/2 - margin/2, 2*margin + 300 + margin)));
   
-  statistics_box_ = Tile("4: Statistics", "gray",
+  statistics_box_ = Tile("4: Statistics", "teal",
                          ci::Rectf(ci::vec2(window_width/2 + margin/2, 2*margin + 200 + margin),
                                    ci::vec2(window_width - margin, 2*margin + 300 + margin)));
 }

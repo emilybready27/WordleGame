@@ -8,10 +8,6 @@ SelectionPage::SelectionPage(double margin, double window_width, double window_h
                              size_t num_guesses, size_t num_letters) {
   double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
 
-//  home_box_ = Tile("Home", "gray",
-//                   ci::Rectf(ci::vec2(margin, 1025),
-//                             ci::vec2(margin + tile_size, 1125)));
-
   for (size_t i = 0; i < num_guesses; i++) {
     selection_.emplace_back(std::vector<Tile>());
     for (size_t j = 0; j < num_letters; j++) {
@@ -39,7 +35,7 @@ void SelectionPage::Draw() const {
 bool SelectionPage::HasMouseEvent(const ci::vec2& position) const {
   for (size_t i = 0; i < selection_.size(); i++) {
     for (size_t j = 0; j < selection_[i].size(); j++) {
-      if (IsInBounds(position, selection_[i][j].GetBounds())) {
+      if (IsInBounds(position, selection_[i][j].GetBounds()) && selection_[i][j].GetColor() != "black") {
         return true;
       }
     }
@@ -50,8 +46,8 @@ bool SelectionPage::HasMouseEvent(const ci::vec2& position) const {
 size_t SelectionPage::GetMouseEvent(const ci::vec2& position) const {
   for (size_t i = 0; i < selection_.size(); i++) {
     for (size_t j = 0; j < selection_[i].size(); j++) {
-      if (IsInBounds(position, selection_[i][j].GetBounds())) {
-        return i*selection_.size() + j;
+      if (IsInBounds(position, selection_[i][j].GetBounds()) && selection_[i][j].GetColor() != "black") {
+        return i*selection_[i].size() + j;
       }
     }
   }
@@ -64,10 +60,6 @@ void SelectionPage::AddGame(size_t game_index) {
   selection_[game_index / 5][game_index % 5].SetLabel(std::to_string(game_index + 1));
   selection_[game_index / 5][game_index % 5].SetColor("gray");
 }
-
-//const Tile &SelectionPage::GetHomeBox() const {
-//  return home_box_;
-//}
 
 const std::vector<std::vector<Tile>> &SelectionPage::GetSelection() const {
   return selection_;

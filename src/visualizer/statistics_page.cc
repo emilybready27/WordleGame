@@ -6,20 +6,20 @@ namespace wordle {
 namespace visualizer {
 
 StatisticsPage::StatisticsPage(double margin, double window_width, double window_height) {
-  title_box_ = Tile("Statistics", "gray", ci::Rectf(ci::vec2(margin, margin),
+  title_box_ = Tile("Statistics", "indigo", ci::Rectf(ci::vec2(margin, margin),
                                                     ci::vec2(window_width - margin, margin + 100)));
   
-  statistics_box_ = Tile(" ", "gray", ci::Rectf(ci::vec2(margin, 2*margin + 100),
+  statistics_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin, 2*margin + 100),
                                                 ci::vec2(window_width - margin, margin + 450)));
 
   double width = statistics_box_.GetBounds().getWidth();
-  games_played_box_ = Tile(" ", "gray", ci::Rectf(ci::vec2(margin, 2*margin + 100),
+  games_played_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin, 2*margin + 100),
                                                   ci::vec2(margin + width/4, 2*margin + 300)));
-  win_percentage_box_ = Tile(" ", "gray", ci::Rectf(ci::vec2(margin + width/4, 2*margin + 100),
+  win_percentage_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin + width/4, 2*margin + 100),
                                                     ci::vec2(margin + width/2, 2*margin + 300)));
-  current_streak_box_ = Tile(" ", "gray", ci::Rectf(ci::vec2(margin + width/2, 2*margin + 100),
+  current_streak_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin + width/2, 2*margin + 100),
                                                     ci::vec2(margin + 3*width/4, 2*margin + 300)));
-  max_streak_box_ = Tile(" ", "gray", ci::Rectf(ci::vec2(margin + 3*width/4, 2*margin + 100),
+  max_streak_box_ = Tile(" ", "indigo", ci::Rectf(ci::vec2(margin + 3*width/4, 2*margin + 100),
                                                 ci::vec2(margin + width, 2*margin + 300)));
   //guess_distribution_box_;
 }

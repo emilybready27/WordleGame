@@ -24,12 +24,10 @@ class SelectionPage : public Page {
   void AddGame(size_t game_index);
 
   void SetSelectionColor(size_t idx, const std::string& color);
-//  const Tile &GetHomeBox() const;
   const std::vector<std::vector<Tile>> &GetSelection() const;
 
  private:
   std::vector<std::vector<Tile>> selection_;
-  // TODO: Tile home_box_;
 };
 
 } // namespace visualizer
