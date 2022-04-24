@@ -33,7 +33,7 @@ private:
   BoardPage board_page_;
   SelectionPage selection_page_;
   StatisticsPage statistics_page_;
-  //InstructionsPage instructions_page_;
+  // TODO: InstructionsPage instructions_page_;
   std::string current_page_;
   
   std::string guess_;

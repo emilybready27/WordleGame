@@ -67,7 +67,7 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     ProcessAction();
     
   } else if (current_page_ == "board" && board_page_.HasMouseEvent(event.getPos())) {
-    action_ = home_page_.GetMouseEvent(event.getPos());
+    action_ = board_page_.GetMouseEvent(event.getPos());
     ProcessAction();
     
   } else if (current_page_ == "selection" && selection_page_.HasMouseEvent(event.getPos())) {
@@ -77,8 +77,9 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     game_chosen_ = true;
     current_page_ = "selection";
     
-  } else if (current_page_ == "statistics") {
-    
+  } else if (current_page_ == "statistics" && statistics_page_.HasMouseEvent(event.getPos())) {
+    action_ = statistics_page_.GetMouseEvent(event.getPos());
+    ProcessAction();
   }
 }
 

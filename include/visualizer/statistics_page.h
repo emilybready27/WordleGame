@@ -17,6 +17,9 @@ class StatisticsPage : public Page {
   std::string GetType() const override;
   void Draw() const override;
   void Draw(const Statistics& statistics);
+
+  bool HasMouseEvent(const ci::vec2& position) const;
+  size_t GetMouseEvent(const ci::vec2& position) const;
     
  private:
   Tile title_box_;
@@ -25,13 +28,13 @@ class StatisticsPage : public Page {
   Tile win_percentage_box_;
   Tile current_streak_box_;
   Tile max_streak_box_;
+  Tile home_box_;
   
   Tile guess_distribution_box_;
   std::vector<Tile> counts_;
   std::vector<Tile> shaded_bars_;
   std::vector<Tile> labels_;
   Tile label_box_;
-  // TODO: Tile home_box_; next to title_box_
 };
 
 } // namespace visualizer

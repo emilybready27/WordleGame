@@ -9,19 +9,19 @@ HomePage::HomePage(double margin, double window_width, double window_height) {
                     ci::Rectf(ci::vec2(margin, margin),
                                 ci::vec2(window_width - margin, margin + 100)));
   
-  new_game_box_ = Tile("1: New Game", "teal",
+  new_game_box_ = Tile("New Game", "teal",
                        ci::Rectf(ci::vec2(margin, 2*margin + 100),
                                  ci::vec2(window_width/2 - margin/2, 2*margin + 200)));
   
-  old_game_box_ = Tile("2: Old Game", "teal",
+  old_game_box_ = Tile("Old Game", "teal",
                        ci::Rectf(ci::vec2(window_width/2 + margin/2, 2*margin + 100),
                                  ci::vec2(window_width - margin, 2*margin + 200)));
   
-  instructions_box_ = Tile("3: Instructions", "teal",
+  instructions_box_ = Tile("Instructions", "teal",
                            ci::Rectf(ci::vec2(margin, 2*margin + 200 + margin),
                                      ci::vec2(window_width/2 - margin/2, 2*margin + 300 + margin)));
   
-  statistics_box_ = Tile("4: Statistics", "teal",
+  statistics_box_ = Tile("Statistics", "teal",
                          ci::Rectf(ci::vec2(window_width/2 + margin/2, 2*margin + 200 + margin),
                                    ci::vec2(window_width - margin, 2*margin + 300 + margin)));
 }
