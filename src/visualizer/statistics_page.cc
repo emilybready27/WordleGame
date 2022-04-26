@@ -80,7 +80,7 @@ void StatisticsPage::Draw(const Statistics& statistics) {
     if ((int) win_count > std::stoi(counts_[i].GetLabel())) {
       counts_[i].SetLabel(std::to_string(win_count));
       shaded_bars_[i].SetBounds(ci::Rectf(ci::vec2(shaded_bars_[i].GetBounds().x1,
-                                                   shaded_bars_[i].GetBounds().y1 - 10),
+                                                   shaded_bars_[i].GetBounds().y1 - 20),
                                           ci::vec2(shaded_bars_[i].GetBounds().x2,
                                                    shaded_bars_[i].GetBounds().y2)));
     }
