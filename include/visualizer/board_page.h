@@ -16,16 +16,15 @@ class BoardPage : public Page {
   BoardPage(double margin, double window_width, double window_height,
             size_t num_guesses, size_t num_letters);
   
-  std::string GetType() const override;
   void Draw() const override;
-  void Draw(const Game& game);
+  void Update(const Game& game);
   void DrawAnswer(const std::string& answer, const std::string& color);
 
-  bool HasMouseEvent(const ci::vec2& position) const;
-  size_t GetMouseEvent(const ci::vec2& position) const;
+  bool HasMouseEvent(const ci::vec2& position) const override;
+  size_t GetMouseEvent(const ci::vec2& position) const override;
 
-  void ResetBoardTiles();
-  void ResetBoardTiles(size_t row);
+  void Reset();
+  void ResetBoardRow(size_t row);
 
   void SetBoardTileLabel(size_t i, size_t j, const std::string& label);
   void SetBoardTileColor(size_t i, size_t j, const std::string& color);

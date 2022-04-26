@@ -4,7 +4,7 @@
 using wordle::Board;
 using wordle::Word;
 
-TEST_CASE("Test UpdateBoard method simple") {
+TEST_CASE("Test Update method simple") {
   Board board = Board(6, 3, "gray", "yellow", "green");
   std::string answer = "cat";
 
@@ -51,7 +51,7 @@ TEST_CASE("Test UpdateBoard method simple") {
   }
 }
 
-TEST_CASE("Test UpdateBoard method repeated 'c'") {
+TEST_CASE("Test Update method repeated 'c'") {
   Board board = Board(6, 5, "gray", "yellow", "green");
   std::string answer = "catch";
   

@@ -20,10 +20,6 @@ SelectionPage::SelectionPage(double margin, double window_width, double window_h
   }
 }
 
-std::string SelectionPage::GetType() const {
-  return "selection";
-}
-
 void SelectionPage::Draw() const {
   for (size_t i = 0; i < 6; i++) {
     for (size_t j = 0; j < 5; j++) {

@@ -26,10 +26,6 @@ HomePage::HomePage(double margin, double window_width, double window_height) {
                                    ci::vec2(window_width - margin, 2*margin + 300 + margin)));
 }
 
-std::string HomePage::GetType() const {
-  return "home";
-}
-
 void HomePage::Draw() const {
   DrawTile(title_box_);
   DrawTile(new_game_box_);

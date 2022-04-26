@@ -15,11 +15,10 @@ class SelectionPage : public Page {
   SelectionPage(double margin, double window_width, double window_height,
             size_t num_guesses, size_t num_letters);
   
-  std::string GetType() const override;
   void Draw() const override;
 
-  bool HasMouseEvent(const ci::vec2& position) const;
-  size_t GetMouseEvent(const ci::vec2& position) const;
+  bool HasMouseEvent(const ci::vec2& position) const override;
+  size_t GetMouseEvent(const ci::vec2& position) const override;
   
   void AddGame(size_t game_index);
 

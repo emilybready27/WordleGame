@@ -45,10 +45,6 @@ StatisticsPage::StatisticsPage(double margin, double window_width, double window
                                                ci::vec2(margin + (window_width - 4*margin) / 5, 1125)));
 }
 
-std::string StatisticsPage::GetType() const {
-  return "statistics";
-}
-
 void StatisticsPage::Draw() const {
   DrawTile(title_box_);
   DrawTile(statistics_box_);
@@ -67,7 +63,7 @@ void StatisticsPage::Draw() const {
   }
 }
     
-void StatisticsPage::Draw(const Statistics& statistics) {
+void StatisticsPage::Update(const Statistics& statistics) {
   games_played_box_.SetLabel("Games\nPlayed:\n" + std::to_string(statistics.GetGamesPlayed()));
   win_percentage_box_.SetLabel("Win\nPercent:\n" + std::to_string(statistics.GetWinPercentage()));
   current_streak_box_.SetLabel("Current\nStreak:\n" + std::to_string(statistics.GetCurrentStreak()));
@@ -85,8 +81,6 @@ void StatisticsPage::Draw(const Statistics& statistics) {
                                                    shaded_bars_[i].GetBounds().y2)));
     }
   }
-
-  Draw();
 }
 
 bool StatisticsPage::HasMouseEvent(const ci::vec2& position) const {
@@ -94,7 +88,7 @@ bool StatisticsPage::HasMouseEvent(const ci::vec2& position) const {
 }
 
 size_t StatisticsPage::GetMouseEvent(const ci::vec2& position) const {
-  return 0;
+  return 0; // only option is to return home
 }
 
 } // namespace visualizer

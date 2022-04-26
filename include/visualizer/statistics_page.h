@@ -14,12 +14,11 @@ class StatisticsPage : public Page {
   StatisticsPage() = default;
   StatisticsPage(double margin, double window_width, double window_height);
   
-  std::string GetType() const override;
   void Draw() const override;
-  void Draw(const Statistics& statistics);
+  void Update(const Statistics& statistics);
 
-  bool HasMouseEvent(const ci::vec2& position) const;
-  size_t GetMouseEvent(const ci::vec2& position) const;
+  bool HasMouseEvent(const ci::vec2& position) const override;
+  size_t GetMouseEvent(const ci::vec2& position) const override;
     
  private:
   Tile title_box_;

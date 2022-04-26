@@ -27,10 +27,6 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
   }
 }
 
-std::string BoardPage::GetType() const {
-  return "board";
-}
-
 void BoardPage::Draw() const {
   DrawTile(home_box_);
 
@@ -39,10 +35,13 @@ void BoardPage::Draw() const {
       DrawTile(board_[i][j]);
     }
   }
+
+  // only visible when game is complete
+  DrawTile(answer_box_);
 }
 
-void BoardPage::Draw(const Game& game) {
-  ResetBoardTiles();
+void BoardPage::Update(const Game& game) {
+  Reset();
 
   for (size_t i = 0; i < game.GetGuessCount(); i++) {
     for (size_t j = 0; j < 5; j++) {
@@ -50,8 +49,10 @@ void BoardPage::Draw(const Game& game) {
       board_[i][j].SetLabelAndColor(std::string(1, letter.ToChar()), letter.GetColor());
     }
   }
-
-  Draw();
+  
+  if (game.IsComplete()) { // display answer
+    answer_box_.SetLabelAndColor(game.GetAnswer().ToString(), game.GetColor());
+  }
 }
 
 bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
@@ -59,25 +60,21 @@ bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
 }
 
 size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
-  return 0;
+  return 0; // only option is to return home
 }
 
-void BoardPage::ResetBoardTiles() {
+void BoardPage::Reset() {
   for (size_t i = 0; i < 6; i++) {
-    ResetBoardTiles(i);
+    ResetBoardRow(i);
   }
+  
+  answer_box_.SetLabelAndColor(" ", "black");
 }
 
-void BoardPage::ResetBoardTiles(size_t row) {
+void BoardPage::ResetBoardRow(size_t row) {
   for (size_t col = 0; col < 5; col++) {
-    board_[row][col].SetLabel(" ");
-    board_[row][col].SetColor("gray");
+    board_[row][col].SetLabelAndColor(" ", "gray");
   }
-}
-
-void BoardPage::DrawAnswer(const std::string& answer, const std::string& color) {
-  answer_box_.SetLabelAndColor(answer, color);
-  DrawTile(answer_box_);
 }
 
 void BoardPage::SetBoardTileLabel(size_t i, size_t j, const std::string &label) {

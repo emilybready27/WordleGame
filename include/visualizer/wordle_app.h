@@ -70,9 +70,21 @@ private:
   // TODO: InstructionsPage instructions_page_;
   
   /**
-   * An indicator for the current page on the screen.
+   * An indication of the current page shown on the screen:
+   * "home", "board", "selection", "instructions", or "statistics".
    */
   std::string current_page_;
+
+  /**
+  * The current action selected by the user.
+  * 0. go to home page
+  * 1. play a game
+  * 2. visit a previous game
+  * 3. view the instructions
+  * 4. view the statistics
+  * 5. quit
+  */
+  size_t action_;
   
   /**
    * The current user guess for a word.
@@ -90,31 +102,17 @@ private:
   size_t guess_count_;
   
   /**
-   * The current action selected by the user.
-   * 0. go to home page
-   * 1. start a new game
-   * 2. visit a previous game
-   * 3. view the instructions
-   * 4. view the statistics
-   * 5. quit
-   */
-  size_t action_;
-  
-  /**
    * The current index of game being considered.
    */
   size_t game_index_;
-  
-  /**
-   * Indicator for showing the game selection for action = 2.
-   */
-  bool game_chosen_;
 
   /**
    * 
    */
-  void ClearScreen();
   void ProcessAction();
+
+  // TODO: magic numbers
+  // TODO: handle > 30 games
   
 };
 
