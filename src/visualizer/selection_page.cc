@@ -40,6 +40,7 @@ bool SelectionPage::HasMouseEvent(const ci::vec2& position) const {
 }
 
 size_t SelectionPage::GetMouseEvent(const ci::vec2& position) const {
+  // returns the index of the game the user selected
   for (size_t i = 0; i < selection_.size(); i++) {
     for (size_t j = 0; j < selection_[i].size(); j++) {
       if (IsInBounds(position, selection_[i][j].GetBounds()) && selection_[i][j].GetColor() != "black") {
@@ -48,17 +49,12 @@ size_t SelectionPage::GetMouseEvent(const ci::vec2& position) const {
     }
   }
   
-  // never executes
-  return 0;
+  return 0; // never executes
 }
 
 void SelectionPage::AddGame(size_t game_index) {
   selection_[game_index / 5][game_index % 5].SetLabel(std::to_string(game_index + 1));
   selection_[game_index / 5][game_index % 5].SetColor("gray");
-}
-
-const std::vector<std::vector<Tile>> &SelectionPage::GetSelection() const {
-  return selection_;
 }
 
 void SelectionPage::SetSelectionColor(size_t idx, const std::string &color) {

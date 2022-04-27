@@ -42,6 +42,7 @@ bool HomePage::HasMouseEvent(const ci::vec2& position) const {
 }
 
 size_t HomePage::GetMouseEvent(const ci::vec2& position) const {
+  // returns the action corresponding to the button clicked
   if (IsInBounds(position, new_game_box_.GetBounds())) {
     return 1;
   } else if (IsInBounds(position, old_game_box_.GetBounds())) {
@@ -53,26 +54,6 @@ size_t HomePage::GetMouseEvent(const ci::vec2& position) const {
   } else {
     return 0;
   }
-}
-
-const Tile &HomePage::GetWelcomeBox() const {
-  return title_box_;
-}
-
-const Tile &HomePage::GetNewGameBox() const {
-  return new_game_box_;
-}
-
-const Tile &HomePage::GetOldGameBox() const {
-  return old_game_box_;
-}
-
-const Tile &HomePage::GetInstructionsBox() const {
-  return instructions_box_;
-}
-
-const Tile &HomePage::GetStatisticsBox() const {
-  return statistics_box_;
 }
 
 } // namespace visualizer

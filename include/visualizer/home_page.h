@@ -9,21 +9,15 @@ namespace wordle {
 
 namespace visualizer {
 
+/** The initial WordleApp Page with all user actions. */
 class HomePage : public Page {
  public:
   HomePage() = default;
   HomePage(double margin, double window_width, double window_height);
   
   void Draw() const override;
-
   bool HasMouseEvent(const ci::vec2& position) const override;
   size_t GetMouseEvent(const ci::vec2& position) const override;
-  
-  const Tile &GetWelcomeBox() const;
-  const Tile &GetNewGameBox() const;
-  const Tile &GetOldGameBox() const;
-  const Tile &GetInstructionsBox() const;
-  const Tile &GetStatisticsBox() const;
   
  private:
   Tile title_box_;

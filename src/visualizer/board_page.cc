@@ -40,6 +40,14 @@ void BoardPage::Draw() const {
   DrawTile(answer_box_);
 }
 
+bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
+  return IsInBounds(position, home_box_.GetBounds());
+}
+
+size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
+  return 0; // only action is to return home
+}
+
 void BoardPage::Update(const Game& game) {
   Reset();
 
@@ -49,18 +57,10 @@ void BoardPage::Update(const Game& game) {
       board_[i][j].SetLabelAndColor(std::string(1, letter.ToChar()), letter.GetColor());
     }
   }
-  
+
   if (game.IsComplete()) { // display answer
     answer_box_.SetLabelAndColor(game.GetAnswer().ToString(), game.GetColor());
   }
-}
-
-bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
-  return IsInBounds(position, home_box_.GetBounds());
-}
-
-size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
-  return 0; // only option is to return home
 }
 
 void BoardPage::Reset() {
@@ -79,22 +79,6 @@ void BoardPage::ResetBoardRow(size_t row) {
 
 void BoardPage::SetBoardTileLabel(size_t i, size_t j, const std::string &label) {
   board_[i][j].SetLabel(label);
-}
-
-void BoardPage::SetBoardTileColor(size_t i, size_t j, const std::string &color) {
-  board_[i][j].SetColor(color);
-}
-
-const Tile &BoardPage::GetAnswerBox() const {
-  return answer_box_;
-}
-
-const Tile &BoardPage::GetHomeBox() const {
-  return home_box_;
-}
-
-const std::vector<std::vector<Tile>> &BoardPage::GetBoard() const {
-  return board_;
 }
 
 } // namespace visualizer

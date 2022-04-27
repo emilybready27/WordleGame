@@ -10,6 +10,7 @@ namespace wordle {
 
 namespace visualizer {
 
+/** The WordleApp Page used to display the board and play the game. */
 class BoardPage : public Page {
  public:
   BoardPage() = default;
@@ -17,21 +18,13 @@ class BoardPage : public Page {
             size_t num_guesses, size_t num_letters);
   
   void Draw() const override;
-  void Update(const Game& game);
-  void DrawAnswer(const std::string& answer, const std::string& color);
-
   bool HasMouseEvent(const ci::vec2& position) const override;
   size_t GetMouseEvent(const ci::vec2& position) const override;
 
+  void Update(const Game& game);
   void Reset();
   void ResetBoardRow(size_t row);
-
   void SetBoardTileLabel(size_t i, size_t j, const std::string& label);
-  void SetBoardTileColor(size_t i, size_t j, const std::string& color);
-  
-  const Tile &GetAnswerBox() const;
-  const Tile &GetHomeBox() const;
-  const std::vector<std::vector<Tile>> &GetBoard() const;
 
  private:
   std::vector<std::vector<Tile>> board_;

@@ -7,15 +7,41 @@ namespace wordle {
 
 namespace visualizer {
 
+/** Abstract Page consisting of Tiles that correspond to mouse events. */
 class Page {
  public:
+  /**
+   * Displays the specific Tiles of the Page.
+   */
   virtual void Draw() const = 0;
-  virtual void DrawTile(const Tile& tile) const;
   
-  virtual bool IsInBounds(const ci::vec2& position, const ci::Rectf& bounds) const;
-  
+  /**
+   * Checks if the given position is within the bounds of any Tiles of the Page.
+   * @param position ci::vec2
+   * @return bool
+   */
   virtual bool HasMouseEvent(const ci::vec2& position) const = 0;
+  
+  /**
+   * Processes the Tile clicked on according to the Page layout.
+   * @param position ci::vec2
+   * @return size_t
+   */
   virtual size_t GetMouseEvent(const ci::vec2& position) const = 0;
+  
+  /**
+   * Displays the Tile according to Cinder methodology.
+   * @param tile Tile
+   */
+  static void DrawTile(const Tile& tile);
+  
+  /**
+   * Checks if the given position is in the given bounds.
+   * @param position ci::vec2
+   * @param bounds ci::Rectf
+   * @return 
+   */
+  static bool IsInBounds(const ci::vec2& position, const ci::Rectf& bounds);
 };
 
 } // namespace visualizer

@@ -16,7 +16,7 @@ namespace visualizer {
 
 /** The Cinder visualization for Wordle. */
 class WordleApp : public ci::app::App {
-public:
+ public:
   /**
    * Initializes the Pages and other state of the WordleApp.
    */
@@ -28,14 +28,14 @@ public:
   void draw() override;
   
   /**
-   * Responds to a user input through a mouse click.
-   * @param event 
+   * Responds to a user input to direct the action of the App.
+   * @param event ci::app::MouseEvent
    */
   void mouseDown(ci::app::MouseEvent event) override;
   
   /**
-   * Responds to a user input through a key input.
-   * @param event 
+   * Responds to a user input of a board guess.
+   * @param event ci::app::KeyEvent
    */
   void keyDown(ci::app::KeyEvent event) override;
 
@@ -54,7 +54,7 @@ public:
    */
   const double kMargin = 100;
   
-private:
+ private:
   /**
    * Instance of the Wordle which stores the game state.
    */
@@ -82,7 +82,6 @@ private:
   * 2. visit a previous game
   * 3. view the instructions
   * 4. view the statistics
-  * 5. quit
   */
   size_t action_;
   
@@ -107,12 +106,11 @@ private:
   size_t game_index_;
 
   /**
-   * 
+   * Directs the behavior based on the user choice of action.
    */
   void ProcessAction();
 
   // TODO: magic numbers
-  // TODO: handle > 30 games
   
 };
 

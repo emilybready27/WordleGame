@@ -25,18 +25,12 @@ StatisticsPage::StatisticsPage(double margin, double window_width, double window
                                                         ci::vec2(window_width - margin, margin + 800)));
   
   for (size_t i = 0; i < 6; i++) {
-    counts_.emplace_back(std::to_string(0), "gray", ci::Rectf(ci::vec2(margin + i*width/6,
-                                                                       margin + 450),
-                                                            ci::vec2(margin + (i+1)*width/6,
-                                                                     margin + 500)));
-    shaded_bars_.emplace_back(" ", "salmon", ci::Rectf(ci::vec2(counts_[i].GetBounds().x1,
-                                                               margin + 795),
-                                                      ci::vec2(counts_[i].GetBounds().x2,
-                                                               margin + 800)));
-    labels_.emplace_back(std::to_string(i + 1), "pink", ci::Rectf(ci::vec2(counts_[i].GetBounds().x1,
-                                                                           margin + 800),
-                                                                  ci::vec2(counts_[i].GetBounds().x2,
-                                                                           margin + 850)));
+    counts_.emplace_back(std::to_string(0), "gray", ci::Rectf(ci::vec2(margin + i*width/6, margin + 450),
+                                                              ci::vec2(margin + (i+1)*width/6, margin + 500)));
+    shaded_bars_.emplace_back(" ", "salmon", ci::Rectf(ci::vec2(counts_[i].GetBounds().x1, margin + 795),
+                                                       ci::vec2(counts_[i].GetBounds().x2, margin + 800)));
+    labels_.emplace_back(std::to_string(i + 1), "pink", ci::Rectf(ci::vec2(counts_[i].GetBounds().x1, margin + 800),
+                                                                  ci::vec2(counts_[i].GetBounds().x2, margin + 850)));
   }
   
   label_box_ = Tile("Guess Distribution", "pink", ci::Rectf(ci::vec2(margin, margin + 850),
@@ -52,15 +46,23 @@ void StatisticsPage::Draw() const {
   DrawTile(win_percentage_box_);
   DrawTile(current_streak_box_);
   DrawTile(max_streak_box_);
+  DrawTile(home_box_);
   DrawTile(guess_distribution_box_);
   DrawTile(label_box_);
-  DrawTile(home_box_);
   
   for (size_t i = 0; i < counts_.size(); i++) {
     DrawTile(counts_[i]);
     DrawTile(shaded_bars_[i]);
     DrawTile(labels_[i]);
   }
+}
+
+bool StatisticsPage::HasMouseEvent(const ci::vec2& position) const {
+  return IsInBounds(position, home_box_.GetBounds());
+}
+
+size_t StatisticsPage::GetMouseEvent(const ci::vec2& position) const {
+  return 0; // only action is to return home
 }
     
 void StatisticsPage::Update(const Statistics& statistics) {
@@ -72,7 +74,7 @@ void StatisticsPage::Update(const Statistics& statistics) {
   for (size_t i = 0; i < statistics.GetGuessDistribution().size(); i++) {
     size_t win_count = statistics.GetGuessDistribution(i);
     
-    // called continuously, only update if there's a change
+    // while called continuously, only update if there's a change
     if ((int) win_count > std::stoi(counts_[i].GetLabel())) {
       counts_[i].SetLabel(std::to_string(win_count));
       shaded_bars_[i].SetBounds(ci::Rectf(ci::vec2(shaded_bars_[i].GetBounds().x1,
@@ -81,14 +83,6 @@ void StatisticsPage::Update(const Statistics& statistics) {
                                                    shaded_bars_[i].GetBounds().y2)));
     }
   }
-}
-
-bool StatisticsPage::HasMouseEvent(const ci::vec2& position) const {
-  return IsInBounds(position, home_box_.GetBounds());
-}
-
-size_t StatisticsPage::GetMouseEvent(const ci::vec2& position) const {
-  return 0; // only option is to return home
 }
 
 } // namespace visualizer

@@ -35,6 +35,9 @@ void WordleApp::draw() {
     case 2:
       selection_page_.Draw();
       break;
+//    case 3:
+//      instructions_page_.Draw();
+//      break;
     case 4:
       statistics_page_.Draw();
       break;
@@ -68,7 +71,7 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
     return;
   }
   
-  // entered a letter, haven't finished guess, haven't finished game
+  // entered a letter, haven't finished guess
   if (isalpha(event.getCharUtf32()) && guess_size_ < wordle_.GetNumLetters()) {
     guess_ += tolower(event.getChar());
     board_page_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, event.getChar()));
@@ -91,8 +94,6 @@ void WordleApp::keyDown(ci::app::KeyEvent event) {
       if (game.IsComplete()) {
         wordle_.GetStatistics().Update(game);
         statistics_page_.Update(wordle_.GetStatistics());
-        action_ = 1;
-        ProcessAction();
       }
     }
 
@@ -136,9 +137,6 @@ void WordleApp::ProcessAction() {
     
   } else if (action_ == 4) {
     current_page_ = "statistics";
-    
-  } else if (action_ == 5) {
-    exit(0);
   }
 }
 
