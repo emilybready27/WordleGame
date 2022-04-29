@@ -67,7 +67,7 @@ size_t StatisticsPage::GetMouseEvent(const ci::vec2& position) const {
     
 void StatisticsPage::Update(const Statistics& statistics) {
   games_played_box_.SetLabel("Games\nPlayed:\n" + std::to_string(statistics.GetGamesPlayed()));
-  win_percentage_box_.SetLabel("Win\nPercent:\n" + std::to_string(statistics.GetWinPercentage()));
+  win_percentage_box_.SetLabel("Win\nPercent:\n" + std::to_string((int) (statistics.GetWinPercentage() * 100)) + "%");
   current_streak_box_.SetLabel("Current\nStreak:\n" + std::to_string(statistics.GetCurrentStreak()));
   max_streak_box_.SetLabel("Max\nStreak:\n" + std::to_string(statistics.GetMaxStreak()));
 

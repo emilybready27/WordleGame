@@ -123,7 +123,7 @@ void WordleApp::ProcessAction() {
     selection_page_.AddGame(game_index_);
 
   } else if (action_ == 1 && current_page_ != "home") {
-    current_page_ = "board";
+    current_page_  = "board";
     
     // go to existing game
     guess_count_ = wordle_.GetGames()[game_index_].GetGuessCount();
