@@ -13,6 +13,8 @@ WordleApp::WordleApp() : wordle_() {
   selection_page_ = SelectionPage(kMargin, kWindowWidth, kWindowHeight,
                                   wordle_.GetNumGuesses(), wordle_.GetNumLetters());
   statistics_page_ = StatisticsPage(kMargin, kWindowWidth, kWindowHeight);
+  instructions_page_ = InstructionsPage(kMargin, kWindowWidth, kWindowHeight,
+                                        wordle_.GetNumGuesses(), wordle_.GetNumLetters());
   
   current_page_ = "home";
   action_ = 0;
@@ -35,9 +37,9 @@ void WordleApp::draw() {
     case 2:
       selection_page_.Draw();
       break;
-//    case 3:
-//      instructions_page_.Draw();
-//      break;
+    case 3:
+      instructions_page_.Draw();
+      break;
     case 4:
       statistics_page_.Draw();
       break;
@@ -55,8 +57,8 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     game_index_ = selection_page_.GetMouseEvent(event.getPos());
     action_ = 1;
     
-//  } else if (current_page_ == "instructions" && instructions_page_.HasMouseEvent(event.getPos())) {
-//    action_ = instructions_page_.GetMouseEvent(event.getPos());
+  } else if (current_page_ == "instructions" && instructions_page_.HasMouseEvent(event.getPos())) {
+    action_ = instructions_page_.GetMouseEvent(event.getPos());
 
   } else if (current_page_ == "statistics" && statistics_page_.HasMouseEvent(event.getPos())) {
     action_ = statistics_page_.GetMouseEvent(event.getPos());

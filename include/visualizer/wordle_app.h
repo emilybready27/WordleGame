@@ -8,6 +8,7 @@
 #include "board_page.h"
 #include "selection_page.h"
 #include "statistics_page.h"
+#include "instructions_page.h"
 #include "tile.h"
 
 namespace wordle {
@@ -67,7 +68,7 @@ class WordleApp : public ci::app::App {
   BoardPage board_page_;
   SelectionPage selection_page_;
   StatisticsPage statistics_page_;
-  // TODO: InstructionsPage instructions_page_;
+  InstructionsPage instructions_page_;
   
   /**
    * An indication of the current page shown on the screen:
