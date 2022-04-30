@@ -23,6 +23,7 @@ class InstructionsPage : public Page {
   std::vector<std::vector<Tile>> examples_;
   std::vector<Tile> descriptions_;
   Tile home_box_;
+  Tile answer_box_;
   
   void ConstructExample1();
   void ConstructExample2();

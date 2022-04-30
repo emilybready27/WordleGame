@@ -6,6 +6,8 @@ namespace visualizer {
 
 InstructionsPage::InstructionsPage(double margin, double window_width, double window_height,
                                    size_t num_guesses, size_t num_letters) {
+  double tile_size = (window_width - (num_letters - 1)*margin) / num_letters;
+  
   title_box_ = Tile("Instructions:", "gray", ci::Rectf(ci::vec2(margin, margin),
                                               ci::vec2(window_width - margin, margin + 100)));
   preface_box_ = Tile("\nGuess the word in 6 (or less) tries.\n"
@@ -15,8 +17,10 @@ InstructionsPage::InstructionsPage(double margin, double window_width, double wi
                                 ci::vec2(window_width - margin, margin + 250)));
   home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 1025),
                                                ci::vec2(margin + (window_width - 4*margin) / 5, 1125)));
-
-  double tile_size = (window_width - (num_letters - 1)*margin) / num_letters;
+  answer_box_ = Tile("Correct answer: sheep", "green",
+                     ci::Rectf(ci::vec2(margin + tile_size + margin/2, 1025),
+                               ci::vec2(window_width - margin, 1125)));
+  
   for (size_t i = 0; i < 3; i++) {
     descriptions_.emplace_back("Description.", "gray",
                                ci::Rectf(ci::vec2(margin, margin + 300 + i*200),
@@ -40,6 +44,7 @@ void InstructionsPage::Draw() const {
   DrawTile(preface_box_);
   DrawTile(title_box_);
   DrawTile(home_box_);
+  DrawTile(answer_box_);
   
   for (size_t i = 0; i < descriptions_.size(); i++) {
     DrawTile(descriptions_[i]);
@@ -58,7 +63,7 @@ size_t InstructionsPage::GetMouseEvent(const glm::vec2 &position) const {
 }
 
 void InstructionsPage::ConstructExample1() {
-  descriptions_[0].SetLabel("The letter s is in the correct spot.");
+  descriptions_[0].SetLabel("The letter s is in the correct spot:");
 
   examples_[0][0].SetLabelAndColor("s", "green");
   examples_[0][1].SetLabelAndColor("t", "gray");
@@ -68,7 +73,7 @@ void InstructionsPage::ConstructExample1() {
 }
 
 void InstructionsPage::ConstructExample2() {
-  descriptions_[1].SetLabel("The letter e is in wrong spot.");
+  descriptions_[1].SetLabel("The letter e is in wrong spot:");
 
   examples_[1][0].SetLabelAndColor("l", "gray");
   examples_[1][1].SetLabelAndColor("e", "yellow");
@@ -78,7 +83,7 @@ void InstructionsPage::ConstructExample2() {
 }
 
 void InstructionsPage::ConstructExample3() {
-  descriptions_[2].SetLabel("None of the letters are in the word.");
+  descriptions_[2].SetLabel("None of the letters are in the word:");
 
   examples_[2][0].SetLabelAndColor("w", "gray");
   examples_[2][1].SetLabelAndColor("o", "gray");
