@@ -35,8 +35,8 @@ StatisticsPage::StatisticsPage(double margin, double window_width, double window
   
   label_box_ = Tile("Guess Distribution", "pink", ci::Rectf(ci::vec2(margin, margin + 850),
                                                               ci::vec2(window_width - margin, margin + 900)));
-  home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 1025),
-                                               ci::vec2(margin + (window_width - 4*margin) / 5, 1125)));
+  home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 1050),
+                                               ci::vec2(margin + (window_width - 4*margin) / 5, 1150)));
 }
 
 void StatisticsPage::Draw() const {

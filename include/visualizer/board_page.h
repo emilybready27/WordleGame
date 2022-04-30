@@ -31,9 +31,12 @@ class BoardPage : public Page {
   Tile answer_box_;
   Tile home_box_;
   std::vector<std::vector<Tile>> board_;
-//  std::vector<std::vector<Tile>> keyboard_;
+  std::vector<std::vector<Tile>> keyboard_;
   
-//  void ConstructKeyboard(double margin, double window_width, double window_height);
+  void ConstructKeyboard(double margin, double window_width, double window_height);
+  void ConstructRow1(double margin, double tile_width, double tile_height);
+  void ConstructRow2(double margin, double tile_width, double tile_height);
+  void ConstructRow3(double margin, double tile_width, double tile_height);
   
 };
 
