@@ -9,7 +9,7 @@ WordleApp::WordleApp() : wordle_() {
   
   home_page_ = HomePage(kMargin, kWindowWidth, kWindowHeight);
   board_page_ = BoardPage(kMargin, kWindowWidth, kWindowHeight,
-                          wordle_.GetNumGuesses(), wordle_.GetNumLetters());
+                          wordle_.GetNumGuesses(), wordle_.GetNumLetters(), kLetters);
   selection_page_ = SelectionPage(kMargin, kWindowWidth, kWindowHeight,
                                   wordle_.GetNumGuesses(), wordle_.GetNumLetters());
   statistics_page_ = StatisticsPage(kMargin, kWindowWidth, kWindowHeight);
@@ -22,6 +22,7 @@ WordleApp::WordleApp() : wordle_() {
   guess_size_ = 0;
   guess_count_ = 0;
   game_index_ = 0;
+  letter_index_ = 28;
 }
 
 void WordleApp::draw() {
@@ -51,7 +52,16 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     action_ = home_page_.GetMouseEvent(event.getPos());
     
   } else if (current_page_ == "board" && board_page_.HasMouseEvent(event.getPos())) {
-    action_ = board_page_.GetMouseEvent(event.getPos());
+    letter_index_ = board_page_.GetMouseEvent(event.getPos());
+    if (letter_index_ == 27) {
+      action_ = 0;
+    } else if (letter_index_ == 26) {
+      ProcessInput('\b');
+      return;
+    } else {
+      ProcessInput(kLetters[letter_index_]);
+      return;
+    }
     
   } else if (current_page_ == "selection" && selection_page_.HasMouseEvent(event.getPos())) {
     game_index_ = selection_page_.GetMouseEvent(event.getPos());
@@ -68,43 +78,12 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
 }
 
 void WordleApp::keyDown(ci::app::KeyEvent event) {
-  // only accept keyboard inputs for board guesses
-  if (current_page_ != "board" || wordle_.GetGames()[game_index_].IsComplete()) {
-    return;
-  }
-  
-  // entered a letter, haven't finished guess
-  if (isalpha(event.getCharUtf32()) && guess_size_ < wordle_.GetNumLetters()) {
-    guess_ += tolower(event.getChar());
-    board_page_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, event.getChar()));
-    
-  // entered a return, have finished guess
-  } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_RETURN && guess_size_ == wordle_.GetNumLetters()) {
-    Game &game = wordle_.GetGames()[game_index_];
-
-    if (!wordle_.GetDictionary().Contains(guess_)) { // invalid word
-      board_page_.ResetBoardRow(guess_count_);
-    } else { // valid word
-      game.Evaluate(guess_);
-      guess_count_++;
-
-      // update tile colors
-      board_page_.Update(game);
-      selection_page_.SetSelectionColor(game_index_, game.GetColor());
-
-      // game over
-      if (game.IsComplete()) {
-        wordle_.GetStatistics().Update(game);
-        statistics_page_.Update(wordle_.GetStatistics());
-      }
-    }
-
-    guess_ = "";
-    guess_size_ = 0;
-
-  } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_BACKSPACE && guess_size_ > 0) {
-    guess_.pop_back();
-    board_page_.SetBoardTileLabel(guess_count_, --guess_size_, " ");
+  if (isalpha(event.getCharUtf32())) {
+    ProcessInput(event.getChar());
+  } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_RETURN) {
+    ProcessInput('\n');
+  } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_BACKSPACE) {
+    ProcessInput('\b');
   }
 }
 
@@ -139,6 +118,48 @@ void WordleApp::ProcessAction() {
     
   } else if (action_ == 4) {
     current_page_ = "statistics";
+  }
+}
+
+void WordleApp::ProcessInput(char input) {
+  // only accept keyboard inputs for board guesses
+  if (current_page_ != "board" || wordle_.GetGames()[game_index_].IsComplete()) {
+    return;
+  }
+
+  // entered a letter, haven't finished guess
+  if (isalpha(input) && guess_size_ < wordle_.GetNumLetters()) {
+    guess_ += tolower(input);
+    board_page_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, input));
+    
+  // entered a backspace, have started guess
+  } else if (input == '\b' && guess_size_ > 0) {
+    guess_.pop_back();
+    board_page_.SetBoardTileLabel(guess_count_, --guess_size_, " ");
+
+  // entered a return, have finished guess
+  } else if (input == '\n' && guess_size_ == wordle_.GetNumLetters()) {
+    Game &game = wordle_.GetGames()[game_index_];
+
+    if (!wordle_.GetDictionary().Contains(guess_)) { // invalid word
+      board_page_.ResetBoardRow(guess_count_);
+    } else { // valid word
+      game.Evaluate(guess_);
+      guess_count_++;
+
+      // update tile colors
+      board_page_.Update(game);
+      selection_page_.SetSelectionColor(game_index_, game.GetColor());
+
+      // game over
+      if (game.IsComplete()) {
+        wordle_.GetStatistics().Update(game);
+        statistics_page_.Update(wordle_.GetStatistics());
+      }
+    }
+
+    guess_ = "";
+    guess_size_ = 0;
   }
 }
 

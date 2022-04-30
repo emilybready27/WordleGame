@@ -15,7 +15,7 @@ class BoardPage : public Page {
  public:
   BoardPage() = default;
   BoardPage(double margin, double window_width, double window_height,
-            size_t num_guesses, size_t num_letters);
+            size_t num_guesses, size_t num_letters, const std::vector<char>& letters);
   
   void Draw() const override;
   bool HasMouseEvent(const ci::vec2& position) const override;
@@ -31,10 +31,11 @@ class BoardPage : public Page {
   Tile home_box_;
   std::vector<std::vector<Tile>> board_;
   std::vector<std::vector<Tile>> keyboard_;
+  Tile backspace_;
 
   size_t num_guesses_;
+  std::vector<char> letters_;
   std::map<char, std::string> color_map_;
-   std::vector<char> letters_;
   
   void ConstructKeyboard(double margin, double window_width, double window_height);
   void ConstructRow1(double margin, double tile_width, double tile_height);

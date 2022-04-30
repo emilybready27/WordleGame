@@ -5,7 +5,7 @@ namespace wordle {
 namespace visualizer {
 
 BoardPage::BoardPage(double margin, double window_width, double window_height,
-                     size_t num_guesses, size_t num_letters) {
+                     size_t num_guesses, size_t num_letters, const std::vector<char>& letters) {
   double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
   
   answer_box_ = Tile(" ", "black", ci::Rectf(ci::vec2(margin + tile_size + margin/2, 900),
@@ -25,9 +25,7 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
   }
 
   num_guesses_ = 0;
-  letters_ = {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-              'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
-              'z', 'x', 'c', 'v', 'b', 'n', 'm'};
+  letters_ = letters;
   for (const char letter : letters_) {
     color_map_[letter] = "gray";
   }
@@ -47,7 +45,8 @@ void BoardPage::Draw() const {
       }
     }
   }
-  
+
+  DrawTile(backspace_);
   for (size_t i = 0; i < keyboard_.size(); i++) {
     for (size_t j = 0; j < keyboard_[i].size(); j++) {
       if (keyboard_[i][j].GetColor() == "dark_gray") {
@@ -63,11 +62,35 @@ void BoardPage::Draw() const {
 }
 
 bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
-  return IsInBounds(position, home_box_.GetBounds());
+  for (size_t i = 0; i < keyboard_.size(); i++) {
+    for (size_t j = 0; j < keyboard_[i].size(); j++) {
+      if (IsInBounds(position, keyboard_[i][j].GetBounds())) {
+        return true;
+      }
+    }
+  }
+  return IsInBounds(position, backspace_.GetBounds())
+         || IsInBounds(position, home_box_.GetBounds());
 }
 
 size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
-  return 0; // only action is to return home
+  if (IsInBounds(position, home_box_.GetBounds())) {
+    return 27;
+  } else if (IsInBounds(position, backspace_.GetBounds())) {
+    return 26;
+  } else {
+    size_t counter = 0;
+    for (size_t i = 0; i < keyboard_.size(); i++) {
+      for (size_t j = 0; j < keyboard_[i].size(); j++) {
+        if (IsInBounds(position, keyboard_[i][j].GetBounds())) {
+          return counter;
+        }
+        counter++;
+      }
+    }
+  }
+
+  return 0; // never executes
 }
 
 void BoardPage::Update(const Game& game) {
@@ -109,9 +132,7 @@ void BoardPage::Reset() {
   
   for (size_t i = 0; i < keyboard_.size(); i++) {
     for (size_t j = 0; j < keyboard_[i].size(); j++) {
-      if (keyboard_[i][j].GetLabel() != "bksp") {
-        keyboard_[i][j].SetColor("gray");
-      }
+      keyboard_[i][j].SetColor("gray");
     }
   }
 }
@@ -132,6 +153,11 @@ void BoardPage::ConstructKeyboard(double margin, double window_width, double win
   ConstructRow1(margin, tile_width, tile_height);
   ConstructRow2(margin, tile_width, tile_height);
   ConstructRow3(margin, tile_width, tile_height);
+
+  ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*7,
+                             home_box_.GetBounds().y2 + (1.45)*margin + 2*tile_height);
+  ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(2*tile_width + margin/4, tile_height));
+  backspace_ = Tile("bksp", "red", key);
 }
 
 void BoardPage::ConstructRow1(double margin, double tile_width, double tile_height) {
@@ -162,11 +188,6 @@ void BoardPage::ConstructRow3(double margin, double tile_width, double tile_heig
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
     keyboard_[2].emplace_back(std::string(1, letters_[i+19]), "gray", key);
   }
-
-  ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*7,
-                             home_box_.GetBounds().y2 + (1.45)*margin + 2*tile_height);
-  ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(2*tile_width + margin/4, tile_height));
-  keyboard_[2].emplace_back("bksp", "red", key);
 }
 
 void BoardPage::UpdateKeyboard() {
@@ -178,7 +199,7 @@ void BoardPage::UpdateKeyboard() {
     keyboard_[1][i].SetColor(color_map_[letters_[i+10]]);
   }
 
-  for (size_t i = 0; i < keyboard_[2].size() - 1; i++) {
+  for (size_t i = 0; i < keyboard_[2].size(); i++) {
     keyboard_[2][i].SetColor(color_map_[letters_[i+19]]);
   }
 }

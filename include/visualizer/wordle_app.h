@@ -55,6 +55,13 @@ class WordleApp : public ci::app::App {
    */
   const double kMargin = 100;
   
+  /**
+   * Letters used to play the game.
+   */
+  const std::vector<char> kLetters = {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+                                      'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+                                      'z', 'x', 'c', 'v', 'b', 'n', 'm'};
+  
  private:
   /**
    * Instance of the Wordle which stores the game state.
@@ -105,11 +112,23 @@ class WordleApp : public ci::app::App {
    * The current index of game being considered.
    */
   size_t game_index_;
+  
+  /**
+   * The current letter being clicked on, or
+   * the backspace key for index 26, or
+   * indication to return home for index 27.
+   */
+  size_t letter_index_;
 
   /**
    * Directs the behavior based on the user choice of action.
    */
   void ProcessAction();
+  
+  /**
+   * Directs the state of the board based on the user input.
+   */
+  void ProcessInput(char input);
 
   // TODO: magic numbers
   
