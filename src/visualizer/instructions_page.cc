@@ -15,20 +15,20 @@ InstructionsPage::InstructionsPage(double margin, double window_width, double wi
                       "to show what letters are correct.", "gray",
                       ci::Rectf(ci::vec2(margin, margin),
                                 ci::vec2(window_width - margin, margin + 250)));
-  home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 1025),
-                                               ci::vec2(margin + (window_width - 4*margin) / 5, 1125)));
+  home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 1150),
+                                               ci::vec2(margin + (window_width - 4*margin) / 5, 1250)));
   answer_box_ = Tile("Correct answer: sheep", "green",
-                     ci::Rectf(ci::vec2(margin + tile_size + margin/2, 1025),
-                               ci::vec2(window_width - margin, 1125)));
+                     ci::Rectf(ci::vec2(margin + tile_size + margin/2, 1150),
+                               ci::vec2(window_width - margin, 1250)));
   
   for (size_t i = 0; i < 3; i++) {
     descriptions_.emplace_back("Description.", "gray",
-                               ci::Rectf(ci::vec2(margin, margin + 300 + i*200),
-                                         ci::vec2(window_width - margin, margin + 360 + i*200)));
+                               ci::Rectf(ci::vec2(margin, margin + 300 + i*250),
+                                         ci::vec2(window_width - margin, margin + 380 + i*250)));
     examples_.emplace_back(std::vector<Tile>());
     for (size_t j = 0; j < num_letters; j++) {
       ci::vec2 coords = ci::vec2(margin + (tile_size + margin/2)*j,
-                                 descriptions_[i].GetBounds().y1 + 70);
+                                 descriptions_[i].GetBounds().y1 + margin);
       ci::Rectf square = ci::Rectf(coords, coords + ci::vec2(tile_size, tile_size));
 
       examples_[i].emplace_back(" ", "gray", square);

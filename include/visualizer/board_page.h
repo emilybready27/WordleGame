@@ -25,6 +25,7 @@ class BoardPage : public Page {
   void Reset();
   void ResetBoardRow(size_t row);
   void SetBoardTileLabel(size_t i, size_t j, const std::string& label);
+  void SetSubmitTileColor(const std::string& color);
 
  private:
   Tile answer_box_;
@@ -37,11 +38,12 @@ class BoardPage : public Page {
   std::vector<char> letters_;
   std::map<char, std::string> color_map_;
   
+  void ConstructBoard(double margin, double window_width, double window_height,
+                      size_t num_guesses, size_t num_letters);
   void ConstructKeyboard(double margin, double window_width, double window_height);
   void ConstructRow1(double margin, double tile_width, double tile_height);
   void ConstructRow2(double margin, double tile_width, double tile_height);
   void ConstructRow3(double margin, double tile_width, double tile_height);
-  void UpdateKeyboard();
   
 };
 

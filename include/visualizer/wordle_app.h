@@ -115,8 +115,9 @@ class WordleApp : public ci::app::App {
   
   /**
    * The current letter being clicked on, or
-   * the backspace key for index 26, or
-   * indication to return home for index 27.
+   * the submit key for index 26, or
+   * the backspace key for index 27, or
+   * indication to return home for index 28.
    */
   size_t letter_index_;
 

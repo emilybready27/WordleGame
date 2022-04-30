@@ -22,7 +22,7 @@ WordleApp::WordleApp() : wordle_() {
   guess_size_ = 0;
   guess_count_ = 0;
   game_index_ = 0;
-  letter_index_ = 28;
+  letter_index_ = 0;
 }
 
 void WordleApp::draw() {
@@ -53,14 +53,14 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     
   } else if (current_page_ == "board" && board_page_.HasMouseEvent(event.getPos())) {
     letter_index_ = board_page_.GetMouseEvent(event.getPos());
-    if (letter_index_ == 27) {
+    if (letter_index_ == 28) { // go to home page
       action_ = 0;
-    } else if (letter_index_ == 26) {
-      ProcessInput('\b');
-      return;
-    } else {
-      ProcessInput(kLetters[letter_index_]);
-      return;
+    } else if (letter_index_ == 27) { // backspace
+      return ProcessInput('\b');
+    } else if (letter_index_ == 26) { // submit guess
+      return ProcessInput('\n');
+    } else { // entered letter for guess
+      return ProcessInput(kLetters[letter_index_]);
     }
     
   } else if (current_page_ == "selection" && selection_page_.HasMouseEvent(event.getPos())) {
@@ -72,16 +72,20 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
 
   } else if (current_page_ == "statistics" && statistics_page_.HasMouseEvent(event.getPos())) {
     action_ = statistics_page_.GetMouseEvent(event.getPos());
+  } else {
+    return;
   }
   
   ProcessAction();
 }
 
 void WordleApp::keyDown(ci::app::KeyEvent event) {
-  if (isalpha(event.getCharUtf32())) {
+  if (isalpha(event.getChar())) {
     ProcessInput(event.getChar());
+    
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_RETURN) {
     ProcessInput('\n');
+    
   } else if (event.getCharUtf32() == ci::app::KeyEvent::KEY_BACKSPACE) {
     ProcessInput('\b');
   }
@@ -131,6 +135,10 @@ void WordleApp::ProcessInput(char input) {
   if (isalpha(input) && guess_size_ < wordle_.GetNumLetters()) {
     guess_ += tolower(input);
     board_page_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, input));
+    
+    if (guess_size_ == wordle_.GetNumLetters()) {
+      board_page_.SetSubmitTileColor("green");
+    }
     
   // entered a backspace, have started guess
   } else if (input == '\b' && guess_size_ > 0) {

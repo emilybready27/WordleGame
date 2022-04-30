@@ -6,23 +6,6 @@ namespace visualizer {
 
 BoardPage::BoardPage(double margin, double window_width, double window_height,
                      size_t num_guesses, size_t num_letters, const std::vector<char>& letters) {
-  double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
-  
-  answer_box_ = Tile(" ", "black", ci::Rectf(ci::vec2(margin + tile_size + margin/2, 900),
-                                             ci::vec2(window_width - margin, 1000)));
-  home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 900),
-                                               ci::vec2(margin + tile_size, 1000)));
-  
-  for (size_t i = 0; i < num_guesses; i++) {
-    board_.emplace_back(std::vector<Tile>());
-    for (size_t j = 0; j < num_letters; j++) {
-      ci::vec2 coords = ci::vec2((1.3)*margin + (tile_size + margin/3)*j,
-                                 margin + (tile_size + margin/3)*i);
-      ci::Rectf square = ci::Rectf(coords, coords + ci::vec2(tile_size, tile_size));
-
-      board_[i].emplace_back(" ", "gray", square);
-    }
-  }
 
   num_guesses_ = 0;
   letters_ = letters;
@@ -30,6 +13,7 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
     color_map_[letter] = "gray";
   }
   
+  ConstructBoard(margin, window_width, window_height, num_guesses, num_letters);
   ConstructKeyboard(margin, window_width, window_height);
 }
 
@@ -57,7 +41,6 @@ void BoardPage::Draw() const {
     }
   }
 
-  // only visible when game is complete
   DrawTile(answer_box_);
 }
 
@@ -69,14 +52,18 @@ bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
       }
     }
   }
-  return IsInBounds(position, backspace_.GetBounds())
+
+  return IsInBounds(position, answer_box_.GetBounds())
+         || IsInBounds(position, backspace_.GetBounds())
          || IsInBounds(position, home_box_.GetBounds());
 }
 
 size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
   if (IsInBounds(position, home_box_.GetBounds())) {
-    return 27;
+    return 28;
   } else if (IsInBounds(position, backspace_.GetBounds())) {
+    return 27;
+  } else if (IsInBounds(position, answer_box_.GetBounds())) {
     return 26;
   } else {
     size_t counter = 0;
@@ -96,12 +83,14 @@ size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
 void BoardPage::Update(const Game& game) {
   Reset();
 
+  // update board
   num_guesses_++;
   for (size_t i = 0; i < game.GetGuessCount(); i++) {
     for (size_t j = 0; j < 5; j++) {
       const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
       board_[i][j].SetLabelAndColor(std::string(1, letter.ToChar()), letter.GetColor());
       
+      // update color map
       if (letter.GetColor() == "green") {
         color_map_[letter.ToChar()] = letter.GetColor();
       } else if (letter.GetColor() == "yellow" && color_map_[letter.ToChar()] != "green") {
@@ -112,9 +101,19 @@ void BoardPage::Update(const Game& game) {
     }
   }
 
-  UpdateKeyboard();
+  // update keyboard
+  for (size_t i = 0; i < keyboard_[0].size(); i++) {
+    keyboard_[0][i].SetColor(color_map_[letters_[i]]);
+  }
+  for (size_t i = 0; i < keyboard_[1].size(); i++) {
+    keyboard_[1][i].SetColor(color_map_[letters_[i+10]]);
+  }
+  for (size_t i = 0; i < keyboard_[2].size(); i++) {
+    keyboard_[2][i].SetColor(color_map_[letters_[i+19]]);
+  }
 
-  if (game.IsComplete()) { // display answer
+  // display answer if game is over
+  if (game.IsComplete()) {
     answer_box_.SetLabelAndColor(game.GetAnswer().ToString(), game.GetColor());
   }
 }
@@ -124,7 +123,7 @@ void BoardPage::Reset() {
     ResetBoardRow(i);
   }
   
-  answer_box_.SetLabelAndColor(" ", "black");
+  answer_box_.SetLabelAndColor("submit", "gray");
   
   for (size_t i = 0; i < 26; i++) {
     color_map_[letters_[i]] = "gray";
@@ -145,6 +144,31 @@ void BoardPage::ResetBoardRow(size_t row) {
 
 void BoardPage::SetBoardTileLabel(size_t i, size_t j, const std::string &label) {
   board_[i][j].SetLabel(label);
+}
+
+void BoardPage::SetSubmitTileColor(const std::string& color) {
+  answer_box_.SetColor(color);
+}
+
+void BoardPage::ConstructBoard(double margin, double window_width, double window_height,
+                               size_t num_guesses, size_t num_letters) {
+  double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
+
+  answer_box_ = Tile("submit", "gray", ci::Rectf(ci::vec2(margin + tile_size + margin/2, 900),
+                                                 ci::vec2(window_width - margin, 1000)));
+  home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 900),
+                                               ci::vec2(margin + tile_size, 1000)));
+
+  for (size_t i = 0; i < num_guesses; i++) {
+    board_.emplace_back(std::vector<Tile>());
+    for (size_t j = 0; j < num_letters; j++) {
+      ci::vec2 coords = ci::vec2((1.3)*margin + (tile_size + margin/3)*j,
+                                 margin + (tile_size + margin/3)*i);
+      ci::Rectf square = ci::Rectf(coords, coords + ci::vec2(tile_size, tile_size));
+
+      board_[i].emplace_back(" ", "gray", square);
+    }
+  }
 }
 
 void BoardPage::ConstructKeyboard(double margin, double window_width, double window_height) {
@@ -187,20 +211,6 @@ void BoardPage::ConstructRow3(double margin, double tile_width, double tile_heig
                                home_box_.GetBounds().y2 + (1.45)*margin + 2*tile_height);
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
     keyboard_[2].emplace_back(std::string(1, letters_[i+19]), "gray", key);
-  }
-}
-
-void BoardPage::UpdateKeyboard() {
-  for (size_t i = 0; i < keyboard_[0].size(); i++) {
-    keyboard_[0][i].SetColor(color_map_[letters_[i]]);
-  }
-
-  for (size_t i = 0; i < keyboard_[1].size(); i++) {
-    keyboard_[1][i].SetColor(color_map_[letters_[i+10]]);
-  }
-
-  for (size_t i = 0; i < keyboard_[2].size(); i++) {
-    keyboard_[2][i].SetColor(color_map_[letters_[i+19]]);
   }
 }
 
