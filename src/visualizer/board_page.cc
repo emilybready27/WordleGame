@@ -9,22 +9,25 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
   double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
   
   answer_box_ = Tile(" ", "black",
-                     ci::Rectf(ci::vec2(margin + tile_size + margin/2, 1025),
-                               ci::vec2(window_width - margin, 1125)));
+                     ci::Rectf(ci::vec2(margin + tile_size + margin/2, 925),
+                               ci::vec2(window_width - margin, 1025)));
   home_box_ = Tile("home", "orange",
-                   ci::Rectf(ci::vec2(margin, 1025),
-                             ci::vec2(margin + tile_size, 1125)));
+                   ci::Rectf(ci::vec2(margin, 925),
+                             ci::vec2(margin + tile_size, 1025)));
 
+  num_guesses_ = 0;
   for (size_t i = 0; i < num_guesses; i++) {
     board_.emplace_back(std::vector<Tile>());
     for (size_t j = 0; j < num_letters; j++) {
-      ci::vec2 coords = ci::vec2(margin + (tile_size + margin/2)*j,
-                                 margin + (tile_size + margin/2)*i);
+      ci::vec2 coords = ci::vec2((1.3)*margin + (tile_size + margin/3)*j,
+                                 margin + (tile_size + margin/3)*i);
       ci::Rectf square = ci::Rectf(coords, coords + ci::vec2(tile_size, tile_size));
 
       board_[i].emplace_back(" ", "gray", square);
     }
   }
+  
+//  ConstructKeyboard(margin, window_width, window_height);
 }
 
 void BoardPage::Draw() const {
@@ -32,7 +35,13 @@ void BoardPage::Draw() const {
 
   for (size_t i = 0; i < board_.size(); i++) {
     for (size_t j = 0; j < board_[i].size(); j++) {
-      DrawTile(board_[i][j]);
+      if (board_[i][j].GetColor() == "gray" && board_[i][j].GetLabel() == " ") {
+        DrawTile(board_[i][j], (float) 0.5, (float) 0.5, (float) 0.5); // medium gray
+      } else if (board_[i][j].GetColor() == "gray" && num_guesses_ >= i + 1) {
+        DrawTile(board_[i][j], (float) 0.3, (float) 0.3, (float) 0.3); // dark gray
+      } else {
+        DrawTile(board_[i][j]);
+      }
     }
   }
 
@@ -51,6 +60,7 @@ size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
 void BoardPage::Update(const Game& game) {
   Reset();
 
+  num_guesses_++;
   for (size_t i = 0; i < game.GetGuessCount(); i++) {
     for (size_t j = 0; j < 5; j++) {
       const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
@@ -80,6 +90,13 @@ void BoardPage::ResetBoardRow(size_t row) {
 void BoardPage::SetBoardTileLabel(size_t i, size_t j, const std::string &label) {
   board_[i][j].SetLabel(label);
 }
+
+//void BoardPage::ConstructKeyboard(double margin, double window_width, double window_height) {
+//  keyboard_.emplace_back(std::vector<Tile>);
+//  for (size_t i = 0; i < 10; i++) {
+//    keyboard_[0].emplace_back(" ", "gray", )
+//  }
+//}
 
 } // namespace visualizer
 

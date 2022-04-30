@@ -27,10 +27,13 @@ class BoardPage : public Page {
   void SetBoardTileLabel(size_t i, size_t j, const std::string& label);
 
  private:
-  std::vector<std::vector<Tile>> board_;
+  size_t num_guesses_;
   Tile answer_box_;
   Tile home_box_;
-  // TODO: std::vector<std::vector<Tile>> keyboard_;
+  std::vector<std::vector<Tile>> board_;
+//  std::vector<std::vector<Tile>> keyboard_;
+  
+//  void ConstructKeyboard(double margin, double window_width, double window_height);
   
 };
 

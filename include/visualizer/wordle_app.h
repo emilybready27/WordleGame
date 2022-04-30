@@ -48,7 +48,7 @@ class WordleApp : public ci::app::App {
   /**
    * Window height in pixels.
    */
-  const double kWindowHeight = 1225;
+  const double kWindowHeight = 1500;
   
   /**
    * Window margin in pixels.

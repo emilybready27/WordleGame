@@ -49,7 +49,11 @@ void InstructionsPage::Draw() const {
   for (size_t i = 0; i < descriptions_.size(); i++) {
     DrawTile(descriptions_[i]);
     for (size_t j = 0; j < examples_[i].size(); j++) {
-      DrawTile(examples_[i][j]);
+      if (examples_[i][j].GetColor() == "gray") {
+        DrawTile(examples_[i][j], (float) 0.3, (float) 0.3, (float) 0.3);
+      } else {
+        DrawTile(examples_[i][j]);
+      }
     }
   }
 }

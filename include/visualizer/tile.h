@@ -5,6 +5,7 @@
 
 namespace wordle {
 
+/** Rectangular text box displayed in a Page. */
 class Tile {
 public:
   Tile() = default;
