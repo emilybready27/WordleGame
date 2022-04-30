@@ -86,9 +86,11 @@ void UserInterface::PrintBoard(std::ostream& output,
         SetConsoleTextAttribute(hConsole, colors_[correct_color]);
       } else if (letter.GetColor() == semi_correct_color) {
         SetConsoleTextAttribute(hConsole, colors_[semi_correct_color]);
-      } else {
+      } else if (letter.GetColor() == "dark_" + default_color) {
         SetConsoleTextAttribute(hConsole, colors_[default_color]);
-      }
+      } else if (letter.GetColor() == default_color) {
+        SetConsoleTextAttribute(hConsole, colors_["white"]);
+      } 
       
       output << letter.ToChar();
       message_ += letter.ToChar();

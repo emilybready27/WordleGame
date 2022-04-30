@@ -8,14 +8,11 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
                      size_t num_guesses, size_t num_letters) {
   double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
   
-  answer_box_ = Tile(" ", "black",
-                     ci::Rectf(ci::vec2(margin + tile_size + margin/2, 900),
-                               ci::vec2(window_width - margin, 1000)));
-  home_box_ = Tile("home", "orange",
-                   ci::Rectf(ci::vec2(margin, 900),
-                             ci::vec2(margin + tile_size, 1000)));
-
-  num_guesses_ = 0;
+  answer_box_ = Tile(" ", "black", ci::Rectf(ci::vec2(margin + tile_size + margin/2, 900),
+                                             ci::vec2(window_width - margin, 1000)));
+  home_box_ = Tile("home", "orange", ci::Rectf(ci::vec2(margin, 900),
+                                               ci::vec2(margin + tile_size, 1000)));
+  
   for (size_t i = 0; i < num_guesses; i++) {
     board_.emplace_back(std::vector<Tile>());
     for (size_t j = 0; j < num_letters; j++) {
@@ -26,6 +23,14 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
       board_[i].emplace_back(" ", "gray", square);
     }
   }
+
+  num_guesses_ = 0;
+  letters_ = {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+              'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+              'z', 'x', 'c', 'v', 'b', 'n', 'm'};
+  for (const char letter : letters_) {
+    color_map_[letter] = "gray";
+  }
   
   ConstructKeyboard(margin, window_width, window_height);
 }
@@ -35,9 +40,7 @@ void BoardPage::Draw() const {
 
   for (size_t i = 0; i < board_.size(); i++) {
     for (size_t j = 0; j < board_[i].size(); j++) {
-      if (board_[i][j].GetColor() == "gray" && board_[i][j].GetLabel() == " ") {
-        DrawTile(board_[i][j], (float) 0.5, (float) 0.5, (float) 0.5); // medium gray
-      } else if (board_[i][j].GetColor() == "gray" && num_guesses_ >= i + 1) {
+      if (board_[i][j].GetColor() == "dark_gray") {
         DrawTile(board_[i][j], (float) 0.3, (float) 0.3, (float) 0.3); // dark gray
       } else {
         DrawTile(board_[i][j]);
@@ -47,7 +50,11 @@ void BoardPage::Draw() const {
   
   for (size_t i = 0; i < keyboard_.size(); i++) {
     for (size_t j = 0; j < keyboard_[i].size(); j++) {
-      DrawTile(keyboard_[i][j]);
+      if (keyboard_[i][j].GetColor() == "dark_gray") {
+        DrawTile(keyboard_[i][j], (float) 0.3, (float) 0.3, (float) 0.3); // dark gray
+      } else {
+        DrawTile(keyboard_[i][j]);
+      }
     }
   }
 
@@ -71,8 +78,18 @@ void BoardPage::Update(const Game& game) {
     for (size_t j = 0; j < 5; j++) {
       const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
       board_[i][j].SetLabelAndColor(std::string(1, letter.ToChar()), letter.GetColor());
+      
+      if (letter.GetColor() == "green") {
+        color_map_[letter.ToChar()] = letter.GetColor();
+      } else if (letter.GetColor() == "yellow" && color_map_[letter.ToChar()] != "green") {
+        color_map_[letter.ToChar()] = letter.GetColor();
+      } else if (letter.GetColor() == "dark_gray") {
+        color_map_[letter.ToChar()] = letter.GetColor();
+      }
     }
   }
+
+  UpdateKeyboard();
 
   if (game.IsComplete()) { // display answer
     answer_box_.SetLabelAndColor(game.GetAnswer().ToString(), game.GetColor());
@@ -85,6 +102,18 @@ void BoardPage::Reset() {
   }
   
   answer_box_.SetLabelAndColor(" ", "black");
+  
+  for (size_t i = 0; i < 26; i++) {
+    color_map_[letters_[i]] = "gray";
+  }
+  
+  for (size_t i = 0; i < keyboard_.size(); i++) {
+    for (size_t j = 0; j < keyboard_[i].size(); j++) {
+      if (keyboard_[i][j].GetLabel() != "bksp") {
+        keyboard_[i][j].SetColor("gray");
+      }
+    }
+  }
 }
 
 void BoardPage::ResetBoardRow(size_t row) {
@@ -111,19 +140,8 @@ void BoardPage::ConstructRow1(double margin, double tile_width, double tile_heig
     ci::vec2 coords = ci::vec2((0.6)*margin + (tile_width + margin/4)*i,
                                home_box_.GetBounds().y2 + (0.75)*margin);
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
-    keyboard_[0].emplace_back(" ", "gray", key);
+    keyboard_[0].emplace_back(std::string(1, letters_[i]), "gray", key);
   }
-  
-  keyboard_[0][0].SetLabel("q");
-  keyboard_[0][1].SetLabel("w");
-  keyboard_[0][2].SetLabel("e");
-  keyboard_[0][3].SetLabel("r");
-  keyboard_[0][4].SetLabel("t");
-  keyboard_[0][5].SetLabel("y");
-  keyboard_[0][6].SetLabel("u");
-  keyboard_[0][7].SetLabel("i");
-  keyboard_[0][8].SetLabel("o");
-  keyboard_[0][9].SetLabel("p");
 }
 
 void BoardPage::ConstructRow2(double margin, double tile_width, double tile_height) {
@@ -132,18 +150,8 @@ void BoardPage::ConstructRow2(double margin, double tile_width, double tile_heig
     ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*i,
                                home_box_.GetBounds().y2 + (1.1)*margin + tile_height);
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
-    keyboard_[1].emplace_back(" ", "gray", key);
+    keyboard_[1].emplace_back(std::string(1, letters_[i+10]), "gray", key);
   }
-
-  keyboard_[1][0].SetLabel("a");
-  keyboard_[1][1].SetLabel("s");
-  keyboard_[1][2].SetLabel("d");
-  keyboard_[1][3].SetLabel("f");
-  keyboard_[1][4].SetLabel("g");
-  keyboard_[1][5].SetLabel("h");
-  keyboard_[1][6].SetLabel("j");
-  keyboard_[1][7].SetLabel("k");
-  keyboard_[1][8].SetLabel("l");
 }
 
 void BoardPage::ConstructRow3(double margin, double tile_width, double tile_height) {
@@ -152,21 +160,27 @@ void BoardPage::ConstructRow3(double margin, double tile_width, double tile_heig
     ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*i,
                                home_box_.GetBounds().y2 + (1.45)*margin + 2*tile_height);
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
-    keyboard_[2].emplace_back(" ", "gray", key);
+    keyboard_[2].emplace_back(std::string(1, letters_[i+19]), "gray", key);
   }
-
-  keyboard_[2][0].SetLabel("z");
-  keyboard_[2][1].SetLabel("x");
-  keyboard_[2][2].SetLabel("c");
-  keyboard_[2][3].SetLabel("v");
-  keyboard_[2][4].SetLabel("b");
-  keyboard_[2][5].SetLabel("n");
-  keyboard_[2][6].SetLabel("m");
 
   ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*7,
                              home_box_.GetBounds().y2 + (1.45)*margin + 2*tile_height);
   ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(2*tile_width + margin/4, tile_height));
   keyboard_[2].emplace_back("bksp", "red", key);
+}
+
+void BoardPage::UpdateKeyboard() {
+  for (size_t i = 0; i < keyboard_[0].size(); i++) {
+    keyboard_[0][i].SetColor(color_map_[letters_[i]]);
+  }
+
+  for (size_t i = 0; i < keyboard_[1].size(); i++) {
+    keyboard_[1][i].SetColor(color_map_[letters_[i+10]]);
+  }
+
+  for (size_t i = 0; i < keyboard_[2].size() - 1; i++) {
+    keyboard_[2][i].SetColor(color_map_[letters_[i+19]]);
+  }
 }
 
 } // namespace visualizer

@@ -21,8 +21,8 @@ Board::Board(size_t num_rows, size_t num_columns,
 }
 
 void Board::UpdateBoard(const std::string& guess, const std::string& answer) {
-  Word guess_word = Word(guess, default_color_);
-  Word answer_word = Word(answer, default_color_);
+  Word guess_word = Word(guess, "dark_" + default_color_);
+  Word answer_word = Word(answer, "dark_" + default_color_);
 
   // map each distinct letter in guess to indices of occurrences of that letter in guess
   std::map<char, std::vector<size_t>> guess_indices;
