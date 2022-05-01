@@ -136,10 +136,6 @@ void WordleApp::ProcessInput(char input) {
     guess_ += tolower(input);
     board_page_.SetBoardTileLabel(guess_count_, guess_size_++, std::string(1, input));
     
-    if (guess_size_ == wordle_.GetNumLetters()) {
-      board_page_.SetSubmitTileColor("green");
-    }
-    
   // entered a backspace, have started guess
   } else if (input == '\b' && guess_size_ > 0) {
     guess_.pop_back();
@@ -168,6 +164,12 @@ void WordleApp::ProcessInput(char input) {
 
     guess_ = "";
     guess_size_ = 0;
+  }
+
+  if (guess_size_ == wordle_.GetNumLetters()) {
+    board_page_.SetSubmitTileColor("green");
+  } else if (!wordle_.GetGames()[game_index_].IsComplete()){
+    board_page_.SetSubmitTileColor("gray");
   }
 }
 

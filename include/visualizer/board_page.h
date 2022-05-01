@@ -34,7 +34,7 @@ class BoardPage : public Page {
   std::vector<std::vector<Tile>> keyboard_;
   Tile backspace_;
 
-  size_t num_guesses_;
+  size_t num_guesses_{};
   std::vector<char> letters_;
   std::map<char, std::string> color_map_;
   
