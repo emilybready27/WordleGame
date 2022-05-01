@@ -10,27 +10,27 @@ TEST_CASE("Test Update method simple") {
 
   SECTION("No correct letters") {
     board.UpdateBoard("pin", answer);
-    Word word = Word("pin", "gray");
+    Word word = Word("pin", "dark_gray");
     REQUIRE(board.GetLastWord() == word);
   }
   
   SECTION("One semi-correct letter") {
     board.UpdateBoard("top", answer);
-    Word word = Word("top", "gray");
+    Word word = Word("top", "dark_gray");
     word.SetColor(0, "yellow");
     REQUIRE(board.GetLastWord() == word);
   }
 
   SECTION("One correct letter") {
     board.UpdateBoard("met", answer);
-    Word word = Word("met", "gray");
+    Word word = Word("met", "dark_gray");
     word.SetColor(2, "green");
     REQUIRE(board.GetLastWord() == word);
   }
 
   SECTION("One correct letter, one semi-correct letter") {
     board.UpdateBoard("art", answer);
-    Word word = Word("art", "gray");
+    Word word = Word("art", "dark_gray");
     word.SetColor(0, "yellow");
     word.SetColor(2, "green");
     REQUIRE(board.GetLastWord() == word);
@@ -38,7 +38,7 @@ TEST_CASE("Test Update method simple") {
 
   SECTION("Two correct letters") {
     board.UpdateBoard("bat", answer);
-    Word word = Word("bat", "gray");
+    Word word = Word("bat", "dark_gray");
     word.SetColor(1, "green");
     word.SetColor(2, "green");
     REQUIRE(board.GetLastWord() == word);
@@ -57,7 +57,7 @@ TEST_CASE("Test Update method repeated 'c'") {
   
   SECTION("One semi-correct 'c'") {
     board.UpdateBoard("laces", answer);
-    Word word = Word("laces", "gray");
+    Word word = Word("laces", "dark_gray");
     word.SetColor(1, "green");
     word.SetColor(2, "yellow");
     REQUIRE(board.GetLastWord() == word);
@@ -65,7 +65,7 @@ TEST_CASE("Test Update method repeated 'c'") {
   
   SECTION("One correct 'c'") {
     board.UpdateBoard("catty", answer);
-    Word word = Word("catty", "gray");
+    Word word = Word("catty", "dark_gray");
     word.SetColor(0, "green");
     word.SetColor(1, "green");
     word.SetColor(2, "green");
@@ -74,7 +74,7 @@ TEST_CASE("Test Update method repeated 'c'") {
   
   SECTION("One correct 'c', one semi-correct 'c'") {
     board.UpdateBoard("cacti", answer);
-    Word word = Word("cacti", "gray");
+    Word word = Word("cacti", "dark_gray");
     word.SetColor(0, "green");
     word.SetColor(1, "green");
     word.SetColor(2, "yellow");
