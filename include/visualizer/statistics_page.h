@@ -19,6 +19,10 @@ class StatisticsPage : public Page {
   bool HasMouseEvent(const ci::vec2& position) const override;
   size_t GetMouseEvent(const ci::vec2& position) const override;
 
+  /**
+   * Updates the layout Tiles with updated statistics.
+   * @param statistics Statistics
+   */
   void Update(const Statistics& statistics);
     
  private:
@@ -35,6 +39,8 @@ class StatisticsPage : public Page {
   std::vector<Tile> shaded_bars_;
   std::vector<Tile> labels_;
   Tile label_box_;
+  
+  void ConstructGuessDistribution(double margin, double window_width, double window_height);
 };
 
 } // namespace visualizer

@@ -12,9 +12,9 @@ WordleApp::WordleApp() : wordle_() {
                           wordle_.GetNumGuesses(), wordle_.GetNumLetters(), kLetters);
   selection_page_ = SelectionPage(kMargin, kWindowWidth, kWindowHeight,
                                   wordle_.GetNumGuesses(), wordle_.GetNumLetters());
-  statistics_page_ = StatisticsPage(kMargin, kWindowWidth, kWindowHeight);
   instructions_page_ = InstructionsPage(kMargin, kWindowWidth, kWindowHeight,
                                         wordle_.GetNumGuesses(), wordle_.GetNumLetters());
+  statistics_page_ = StatisticsPage(kMargin, kWindowWidth, kWindowHeight);
   
   current_page_ = "home";
   action_ = 0;
@@ -53,13 +53,14 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     
   } else if (current_page_ == "board" && board_page_.HasMouseEvent(event.getPos())) {
     letter_index_ = board_page_.GetMouseEvent(event.getPos());
+    
     if (letter_index_ == 28) { // go to home page
       action_ = 0;
     } else if (letter_index_ == 27) { // backspace
       return ProcessInput('\b');
     } else if (letter_index_ == 26) { // submit guess
       return ProcessInput('\n');
-    } else { // entered letter for guess
+    } else { // letter for guess
       return ProcessInput(kLetters[letter_index_]);
     }
     

@@ -114,10 +114,7 @@ class WordleApp : public ci::app::App {
   size_t game_index_;
   
   /**
-   * The current letter being clicked on, or
-   * the submit key for index 26, or
-   * the backspace key for index 27, or
-   * indication to return home for index 28.
+   * The letter being clicked on through the BoardPage.
    */
   size_t letter_index_;
 

@@ -9,13 +9,13 @@ SelectionPage::SelectionPage(double margin, double window_width, double window_h
   double tile_size = (window_width - (num_letters-1)*margin) / num_letters;
 
   for (size_t i = 0; i < num_guesses; i++) {
-    selection_.emplace_back(std::vector<Tile>());
+    game_indices_.emplace_back(std::vector<Tile>());
     for (size_t j = 0; j < num_letters; j++) {
       ci::vec2 coords = ci::vec2(margin + (tile_size + margin/2)*j,
                                  margin + (tile_size + margin/2)*i);
       ci::Rectf square = ci::Rectf(coords, coords + ci::vec2(tile_size, tile_size));
 
-      selection_[i].emplace_back(" ", "black", square);
+      game_indices_[i].emplace_back(" ", "black", square); // initially invisible
     }
   }
 }
@@ -23,15 +23,15 @@ SelectionPage::SelectionPage(double margin, double window_width, double window_h
 void SelectionPage::Draw() const {
   for (size_t i = 0; i < 6; i++) {
     for (size_t j = 0; j < 5; j++) {
-      DrawTile(selection_[i][j]);
+      DrawTile(game_indices_[i][j]);
     }
   }
 }
 
 bool SelectionPage::HasMouseEvent(const ci::vec2& position) const {
-  for (size_t i = 0; i < selection_.size(); i++) {
-    for (size_t j = 0; j < selection_[i].size(); j++) {
-      if (IsInBounds(position, selection_[i][j].GetBounds()) && selection_[i][j].GetColor() != "black") {
+  for (size_t i = 0; i < game_indices_.size(); i++) {
+    for (size_t j = 0; j < game_indices_[i].size(); j++) {
+      if (IsInBounds(position, game_indices_[i][j].GetBounds()) && game_indices_[i][j].GetColor() != "black") {
         return true;
       }
     }
@@ -41,10 +41,10 @@ bool SelectionPage::HasMouseEvent(const ci::vec2& position) const {
 
 size_t SelectionPage::GetMouseEvent(const ci::vec2& position) const {
   // returns the index of the game the user selected
-  for (size_t i = 0; i < selection_.size(); i++) {
-    for (size_t j = 0; j < selection_[i].size(); j++) {
-      if (IsInBounds(position, selection_[i][j].GetBounds()) && selection_[i][j].GetColor() != "black") {
-        return i*selection_[i].size() + j;
+  for (size_t i = 0; i < game_indices_.size(); i++) {
+    for (size_t j = 0; j < game_indices_[i].size(); j++) {
+      if (IsInBounds(position, game_indices_[i][j].GetBounds()) && game_indices_[i][j].GetColor() != "black") {
+        return i*game_indices_[i].size() + j;
       }
     }
   }
@@ -53,12 +53,12 @@ size_t SelectionPage::GetMouseEvent(const ci::vec2& position) const {
 }
 
 void SelectionPage::AddGame(size_t game_index) {
-  selection_[game_index / 5][game_index % 5].SetLabel(std::to_string(game_index + 1));
-  selection_[game_index / 5][game_index % 5].SetColor("gray");
+  game_indices_[game_index / 5][game_index % 5].SetLabel(std::to_string(game_index + 1));
+  game_indices_[game_index / 5][game_index % 5].SetColor("gray");
 }
 
-void SelectionPage::SetSelectionColor(size_t idx, const std::string &color) {
-  selection_[idx / 5][idx % 5].SetColor(color);
+void SelectionPage::SetSelectionColor(size_t index, const std::string &color) {
+  game_indices_[index / 5][index % 5].SetColor(color);
 }
 
 } // namespace visualizer

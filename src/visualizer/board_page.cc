@@ -7,7 +7,6 @@ namespace visualizer {
 BoardPage::BoardPage(double margin, double window_width, double window_height,
                      size_t num_guesses, size_t num_letters, const std::vector<char>& letters) {
 
-  num_guesses_ = 0;
   letters_ = letters;
   for (const char letter : letters_) {
     color_map_[letter] = "gray";
@@ -18,8 +17,7 @@ BoardPage::BoardPage(double margin, double window_width, double window_height,
 }
 
 void BoardPage::Draw() const {
-  DrawTile(home_box_);
-
+  // draw board
   for (size_t i = 0; i < board_.size(); i++) {
     for (size_t j = 0; j < board_[i].size(); j++) {
       if (board_[i][j].GetColor() == "dark_gray") {
@@ -30,7 +28,7 @@ void BoardPage::Draw() const {
     }
   }
 
-  DrawTile(backspace_);
+  // draw keyboard
   for (size_t i = 0; i < keyboard_.size(); i++) {
     for (size_t j = 0; j < keyboard_[i].size(); j++) {
       if (keyboard_[i][j].GetColor() == "dark_gray") {
@@ -41,7 +39,9 @@ void BoardPage::Draw() const {
     }
   }
 
+  DrawTile(home_box_);
   DrawTile(answer_box_);
+  DrawTile(backspace_);
 }
 
 bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
@@ -59,6 +59,8 @@ bool BoardPage::HasMouseEvent(const ci::vec2& position) const {
 }
 
 size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
+  // returns the index of the letter clicked on, or an index larger than 25
+  // corresponding to one of the other three button options
   if (IsInBounds(position, home_box_.GetBounds())) {
     return 28;
   } else if (IsInBounds(position, backspace_.GetBounds())) {
@@ -66,6 +68,7 @@ size_t BoardPage::GetMouseEvent(const ci::vec2& position) const {
   } else if (IsInBounds(position, answer_box_.GetBounds())) {
     return 26;
   } else {
+    
     size_t counter = 0;
     for (size_t i = 0; i < keyboard_.size(); i++) {
       for (size_t j = 0; j < keyboard_[i].size(); j++) {
@@ -84,7 +87,6 @@ void BoardPage::Update(const Game& game) {
   Reset();
 
   // update board
-  num_guesses_++;
   for (size_t i = 0; i < game.GetGuessCount(); i++) {
     for (size_t j = 0; j < 5; j++) {
       const Letter &letter = game.GetBoard().GetWords()[i].GetLetter(j);
@@ -174,9 +176,10 @@ void BoardPage::ConstructBoard(double margin, double window_width, double window
 void BoardPage::ConstructKeyboard(double margin, double window_width, double window_height) {
   double tile_width = (window_width - margin - 2.5*margin) / 10;
   double tile_height = (window_height - home_box_.GetBounds().y2 - (2.5)*margin) / 3;
-  ConstructRow1(margin, tile_width, tile_height);
-  ConstructRow2(margin, tile_width, tile_height);
-  ConstructRow3(margin, tile_width, tile_height);
+  
+  ConstructKeyboardRow1(margin, tile_width, tile_height);
+  ConstructKeyboardRow2(margin, tile_width, tile_height);
+  ConstructKeyboardRow3(margin, tile_width, tile_height);
 
   ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*7,
                              home_box_.GetBounds().y2 + (1.45)*margin + 2*tile_height);
@@ -184,32 +187,35 @@ void BoardPage::ConstructKeyboard(double margin, double window_width, double win
   backspace_ = Tile("bksp", "red", key);
 }
 
-void BoardPage::ConstructRow1(double margin, double tile_width, double tile_height) {
+void BoardPage::ConstructKeyboardRow1(double margin, double tile_width, double tile_height) {
   keyboard_.emplace_back(std::vector<Tile>());
   for (size_t i = 0; i < 10; i++) {
     ci::vec2 coords = ci::vec2((0.6)*margin + (tile_width + margin/4)*i,
                                home_box_.GetBounds().y2 + (0.75)*margin);
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
+    
     keyboard_[0].emplace_back(std::string(1, letters_[i]), "gray", key);
   }
 }
 
-void BoardPage::ConstructRow2(double margin, double tile_width, double tile_height) {
+void BoardPage::ConstructKeyboardRow2(double margin, double tile_width, double tile_height) {
   keyboard_.emplace_back(std::vector<Tile>());
   for (size_t i = 0; i < 9; i++) {
     ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*i,
                                home_box_.GetBounds().y2 + (1.1)*margin + tile_height);
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
+    
     keyboard_[1].emplace_back(std::string(1, letters_[i+10]), "gray", key);
   }
 }
 
-void BoardPage::ConstructRow3(double margin, double tile_width, double tile_height) {
+void BoardPage::ConstructKeyboardRow3(double margin, double tile_width, double tile_height) {
   keyboard_.emplace_back(std::vector<Tile>());
   for (size_t i = 0; i < 7; i++) {
     ci::vec2 coords = ci::vec2(margin + (tile_width + margin/4)*i,
                                home_box_.GetBounds().y2 + (1.45)*margin + 2*tile_height);
     ci::Rectf key = ci::Rectf(coords, coords + ci::vec2(tile_width, tile_height));
+    
     keyboard_[2].emplace_back(std::string(1, letters_[i+19]), "gray", key);
   }
 }

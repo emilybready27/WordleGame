@@ -36,9 +36,11 @@ class Page {
   static void DrawTile(const Tile& tile);
 
   /**
-   * Displays the Tile according to Cinder methodology.
+   * Displays the Tile with the given rgb values according to Cinder methodology.
    * @param tile Tile
-   * @param ci::Color color
+   * @param float r
+   * @param float g
+   * @param float b
    */
   static void DrawTile(const Tile& tile, float r, float g, float b);
   
@@ -46,7 +48,7 @@ class Page {
    * Checks if the given position is in the given bounds.
    * @param position ci::vec2
    * @param bounds ci::Rectf
-   * @return 
+   * @return bool
    */
   static bool IsInBounds(const ci::vec2& position, const ci::Rectf& bounds);
 };

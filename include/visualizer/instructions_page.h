@@ -7,6 +7,7 @@ namespace wordle {
 
 namespace visualizer {
 
+/** The WordleApp page with gameplay instructions. */
 class InstructionsPage : public Page {
  public:
   InstructionsPage() = default;
@@ -25,6 +26,8 @@ class InstructionsPage : public Page {
   Tile home_box_;
   Tile answer_box_;
   
+  void ConstructExamples(double margin, double window_width, double window_height,
+                         size_t num_guesses, size_t num_letters);
   void ConstructExample1();
   void ConstructExample2();
   void ConstructExample3();
