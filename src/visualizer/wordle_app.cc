@@ -66,7 +66,12 @@ void WordleApp::mouseDown(ci::app::MouseEvent event) {
     
   } else if (current_page_ == "selection" && selection_page_.HasMouseEvent(event.getPos())) {
     game_index_ = selection_page_.GetMouseEvent(event.getPos());
-    action_ = 1;
+    
+    if (game_index_ == selection_page_.GetMaxNumGames()) {
+      action_ = 0;
+    } else {
+      action_ = 1;
+    }
     
   } else if (current_page_ == "instructions" && instructions_page_.HasMouseEvent(event.getPos())) {
     action_ = instructions_page_.GetMouseEvent(event.getPos());

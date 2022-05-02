@@ -32,11 +32,22 @@ class SelectionPage : public Page {
    * @param color std::string
    */
   void SetSelectionColor(size_t index, const std::string& color);
+  
+  /**
+   * Gets the maximum number of games supported.
+   * @return size_t
+   */
+  size_t GetMaxNumGames() const;
 
  private:
+  Tile home_box_;
   std::vector<std::vector<Tile>> game_indices_;
-
-  // TODO: handle > 30 games
+  size_t num_games_;
+  size_t max_num_games_;
+  size_t num_rows_;
+  size_t num_cols_;
+  
+  void ReconstructGameIndices();
 };
 
 } // namespace visualizer

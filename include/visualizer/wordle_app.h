@@ -127,8 +127,6 @@ class WordleApp : public ci::app::App {
    * Directs the state of the board based on the user input.
    */
   void ProcessInput(char input);
-
-  // TODO: magic numbers
   
 };
 

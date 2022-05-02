@@ -77,7 +77,7 @@ void InstructionsPage::ConstructExamples(double margin, double window_width, dou
 void InstructionsPage::ConstructExample1() {
   descriptions_[0].SetLabel("The letter s is in the correct spot:");
 
-  examples_[0][0].SetLabelAndColor("s", "dark_green");
+  examples_[0][0].SetLabelAndColor("s", "green");
   examples_[0][1].SetLabelAndColor("t", "dark_gray");
   examples_[0][2].SetLabelAndColor("a", "dark_gray");
   examples_[0][3].SetLabelAndColor("r", "dark_gray");
