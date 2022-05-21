@@ -11,7 +11,7 @@ For my final project, my idea is to recreate the Wordle game that became popular
   - Word: consists of five Letters and a string representation
   - Letter: each has its own associated color
 - Implement functionality to construct a single game given a single word
-- Print state of the game to the console
+- PrintLn state of the game to the console
 
 ## Week 2: Console User Inputs
 
